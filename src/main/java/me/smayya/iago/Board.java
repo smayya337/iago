@@ -68,10 +68,10 @@ public class Board {
     }
 
     private boolean isValid(Coordinate coordinate, Player player) {
-        return flippedSpots(coordinate, player) > 0;
+        return !flippedSpots(coordinate, player).isEmpty();
     }
 
-    private int flippedSpots(Coordinate coordinate, Player player) {
-        return 0;
+    private Set<Coordinate> flippedSpots(Coordinate coordinate, Player player) {
+        return new HashSet<>();
     }
 }
