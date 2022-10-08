@@ -2,7 +2,7 @@ package me.smayya.iago;
 
 import java.util.Objects;
 
-public class Coordinate {
+public class Coordinate implements Comparable<Coordinate> {
     private final int row;
     private final int column;
 
@@ -41,5 +41,50 @@ public class Coordinate {
     @Override
     public int hashCode() {
         return Objects.hash(row, column);
+    }
+
+    @Override
+    public int compareTo(Coordinate o) {
+        if (row < o.getRow()) {
+            return -1;
+        }
+        else if (row > o.getRow()) {
+            return 1;
+        }
+        else {
+            return Integer.compare(column, o.getColumn());
+        }
+    }
+
+    public boolean isUp(Coordinate coordinate) {
+        return column == coordinate.getColumn() && coordinate.getRow() < row;
+    }
+
+    public boolean isDown(Coordinate coordinate) {
+        return column == coordinate.getColumn() && coordinate.getRow() > row;
+    }
+
+    public boolean isLeft(Coordinate coordinate) {
+        return row == coordinate.getRow() && coordinate.getColumn() < row;
+    }
+
+    public boolean isRight(Coordinate coordinate) {
+        return row == coordinate.getRow() && coordinate.getColumn() > row;
+    }
+
+    public boolean isUpLeft(Coordinate coordinate) {
+        return row - coordinate.getRow() == column - coordinate.getColumn() && coordinate.getRow() < row && coordinate.getColumn() < column;
+    }
+
+    public boolean isUpRight(Coordinate coordinate) {
+        return row - coordinate.getRow() == column - coordinate.getColumn() && coordinate.getRow() < row && coordinate.getColumn() > column;
+    }
+
+    public boolean isDownLeft(Coordinate coordinate) {
+        return row - coordinate.getRow() == column - coordinate.getColumn() && coordinate.getRow() > row && coordinate.getColumn() < column;
+    }
+
+    public boolean isDownRight(Coordinate coordinate) {
+        return row - coordinate.getRow() == column - coordinate.getColumn() && coordinate.getRow() > row && coordinate.getColumn() > column;
     }
 }
