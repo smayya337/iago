@@ -1,5 +1,8 @@
 package me.smayya.iago;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Board {
     private static final String EMPTY_CHARACTER = ".";
     private static final int DEFAULT_ROWS = 8;
@@ -47,5 +50,15 @@ public class Board {
             board += EMPTY_CHARACTER;
         }
         return board;
+    }
+
+    public Set<Coordinate> getEmptyCoordinates() {
+        Set<Coordinate> emptyCoordinates = new HashSet<>();
+        for (int i = 0; i < size; i++) {
+            if (board.charAt(i) == EMPTY_CHARACTER.charAt(0)) {
+                emptyCoordinates.add(Coordinate.getCoordinateFromIndex(i, rows));
+            }
+        }
+        return emptyCoordinates;
     }
 }
