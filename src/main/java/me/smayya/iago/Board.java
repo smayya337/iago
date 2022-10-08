@@ -1,6 +1,8 @@
 package me.smayya.iago;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -11,13 +13,15 @@ public class Board {
     private final int rows;
     private final int columns;
     private final int size;
-    private final String board;
+    private String board;
+    private final Map<String, Integer> counts;
 
     public Board(int rows, int columns, String board) {
         this.rows = rows;
         this.columns = columns;
         this.size = rows * columns;
         this.board = board;
+        this.counts = initializeCounts(board);
     }
 
     public Board(int rows, int columns) {
@@ -73,5 +77,40 @@ public class Board {
 
     private Set<Coordinate> flippedSpots(Coordinate coordinate, Player player) {
         return new HashSet<>();
+    }
+
+    public void move(Coordinate coordinate, Player player) {
+        Set<Coordinate> spotsToFlip = flippedSpots(coordinate, player);
+        flip(coordinate, player);
+        for (Coordinate spot:
+             spotsToFlip) {
+            flip(spot, player);
+        }
+    }
+
+    private void flip(Coordinate coordinate, Player player) {
+        int index = Coordinate.getIndexFromCoordinate(coordinate, rows);
+        String originalToken = String.valueOf(board.charAt(index));
+        replaceBoard(index, player);
+        updateCounts(originalToken, -1);
+        updateCounts(player.getToken(), 1);
+    }
+
+    private void replaceBoard(int index, Player player) {
+        board = board.substring(0, index) + player.getToken() + board.substring(index + 1);
+    }
+
+    private void updateCounts(String key, int difference) {
+        counts.put(key, counts.getOrDefault(key, 0) + difference);
+    }
+
+    private static Map<String, Integer> initializeCounts(String board) {
+        Map<String, Integer> counts = new HashMap<>();
+        for (char c:
+             board.toCharArray()) {
+            String cString = String.valueOf(c);
+            counts.put(cString, counts.getOrDefault(cString, 0) + 1);
+        }
+        return counts;
     }
 }
