@@ -78,14 +78,43 @@ public class Board {
     }
 
     private Set<Coordinate> flippedSpots(Coordinate coordinate, Player player) {
-        return new HashSet<>();
+        int index = Coordinate.getIndexFromCoordinate(coordinate, rows);
+        Set<Coordinate> spots = new HashSet<>();
+        for (String direction :
+                relationships.keySet()) {
+            List<Coordinate> potentialSpots = relationships.get(direction)[index];
+            spots.addAll(flippedSpotsInList(potentialSpots, player));
+        }
+        return spots;
+    }
+
+    private Set<Coordinate> flippedSpotsInList(List<Coordinate> spotList, Player player) {
+        boolean terminatedBySamePlayerToken = false;
+        Set<Coordinate> spots = new HashSet<>();
+        for (Coordinate spot :
+                spotList) {
+            String token = getTokenAtCoordinate(spot);
+            if (token.equals(player.getToken())) {
+                terminatedBySamePlayerToken = true;
+                break;
+            } else if (token.equals(EMPTY_CHARACTER)) {
+                break;
+            } else {
+                spots.add(spot);
+            }
+        }
+        if (terminatedBySamePlayerToken) {
+            return spots;
+        } else {
+            return new HashSet<>();
+        }
     }
 
     public void move(Coordinate coordinate, Player player) {
         Set<Coordinate> spotsToFlip = flippedSpots(coordinate, player);
         flip(coordinate, player);
-        for (Coordinate spot:
-             spotsToFlip) {
+        for (Coordinate spot :
+                spotsToFlip) {
             flip(spot, player);
         }
     }
@@ -108,8 +137,8 @@ public class Board {
 
     private static Map<String, Integer> initializeCounts(String board) {
         Map<String, Integer> counts = new HashMap<>();
-        for (char c:
-             board.toCharArray()) {
+        for (char c :
+                board.toCharArray()) {
             String cString = String.valueOf(c);
             counts.put(cString, counts.getOrDefault(cString, 0) + 1);
         }
@@ -145,8 +174,8 @@ public class Board {
 
     private static List<Coordinate>[] initializeUps(Set<Coordinate> coordinates, int rows) {
         List<Coordinate>[] relations = new List[coordinates.size()];
-        for (Coordinate coordinate:
-             coordinates) {
+        for (Coordinate coordinate :
+                coordinates) {
             int index = Coordinate.getIndexFromCoordinate(coordinate, rows);
             relations[index] = coordinates.stream().filter(coordinate::isUp).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
         }
@@ -155,7 +184,7 @@ public class Board {
 
     private static List<Coordinate>[] initializeDowns(Set<Coordinate> coordinates, int rows) {
         List<Coordinate>[] relations = new List[coordinates.size()];
-        for (Coordinate coordinate:
+        for (Coordinate coordinate :
                 coordinates) {
             int index = Coordinate.getIndexFromCoordinate(coordinate, rows);
             relations[index] = coordinates.stream().filter(coordinate::isDown).sorted(Comparator.naturalOrder()).collect(Collectors.toList());
@@ -165,7 +194,7 @@ public class Board {
 
     private static List<Coordinate>[] initializeLefts(Set<Coordinate> coordinates, int rows) {
         List<Coordinate>[] relations = new List[coordinates.size()];
-        for (Coordinate coordinate:
+        for (Coordinate coordinate :
                 coordinates) {
             int index = Coordinate.getIndexFromCoordinate(coordinate, rows);
             relations[index] = coordinates.stream().filter(coordinate::isLeft).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
@@ -175,7 +204,7 @@ public class Board {
 
     private static List<Coordinate>[] initializeRights(Set<Coordinate> coordinates, int rows) {
         List<Coordinate>[] relations = new List[coordinates.size()];
-        for (Coordinate coordinate:
+        for (Coordinate coordinate :
                 coordinates) {
             int index = Coordinate.getIndexFromCoordinate(coordinate, rows);
             relations[index] = coordinates.stream().filter(coordinate::isRight).sorted(Comparator.naturalOrder()).collect(Collectors.toList());
@@ -185,7 +214,7 @@ public class Board {
 
     private static List<Coordinate>[] initializeUpLefts(Set<Coordinate> coordinates, int rows) {
         List<Coordinate>[] relations = new List[coordinates.size()];
-        for (Coordinate coordinate:
+        for (Coordinate coordinate :
                 coordinates) {
             int index = Coordinate.getIndexFromCoordinate(coordinate, rows);
             relations[index] = coordinates.stream().filter(coordinate::isUpLeft).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
@@ -195,7 +224,7 @@ public class Board {
 
     private static List<Coordinate>[] initializeUpRights(Set<Coordinate> coordinates, int rows) {
         List<Coordinate>[] relations = new List[coordinates.size()];
-        for (Coordinate coordinate:
+        for (Coordinate coordinate :
                 coordinates) {
             int index = Coordinate.getIndexFromCoordinate(coordinate, rows);
             relations[index] = coordinates.stream().filter(coordinate::isUpRight).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
@@ -205,7 +234,7 @@ public class Board {
 
     private static List<Coordinate>[] initializeDownLefts(Set<Coordinate> coordinates, int rows) {
         List<Coordinate>[] relations = new List[coordinates.size()];
-        for (Coordinate coordinate:
+        for (Coordinate coordinate :
                 coordinates) {
             int index = Coordinate.getIndexFromCoordinate(coordinate, rows);
             relations[index] = coordinates.stream().filter(coordinate::isDownLeft).sorted(Comparator.naturalOrder()).collect(Collectors.toList());
@@ -215,11 +244,16 @@ public class Board {
 
     private static List<Coordinate>[] initializeDownRights(Set<Coordinate> coordinates, int rows) {
         List<Coordinate>[] relations = new List[coordinates.size()];
-        for (Coordinate coordinate:
+        for (Coordinate coordinate :
                 coordinates) {
             int index = Coordinate.getIndexFromCoordinate(coordinate, rows);
             relations[index] = coordinates.stream().filter(coordinate::isDownRight).sorted(Comparator.naturalOrder()).collect(Collectors.toList());
         }
         return relations;
+    }
+
+    public String getTokenAtCoordinate(Coordinate coordinate) {
+        int index = Coordinate.getIndexFromCoordinate(coordinate, rows);
+        return String.valueOf(board.charAt(index));
     }
 }
