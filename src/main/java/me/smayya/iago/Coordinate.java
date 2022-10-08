@@ -2,7 +2,7 @@ package me.smayya.iago;
 
 import java.util.Objects;
 
-public class Coordinate {
+public class Coordinate implements Comparable<Coordinate> {
     private final int row;
     private final int column;
 
@@ -41,6 +41,19 @@ public class Coordinate {
     @Override
     public int hashCode() {
         return Objects.hash(row, column);
+    }
+
+    @Override
+    public int compareTo(Coordinate o) {
+        if (row < o.getRow()) {
+            return -1;
+        }
+        else if (row > o.getRow()) {
+            return 1;
+        }
+        else {
+            return Integer.compare(column, o.getColumn());
+        }
     }
 
     public boolean isUp(Coordinate coordinate) {
