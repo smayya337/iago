@@ -2,6 +2,7 @@ package me.smayya.iago;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Board {
     private static final String EMPTY_CHARACTER = ".";
@@ -60,5 +61,17 @@ public class Board {
             }
         }
         return emptyCoordinates;
+    }
+
+    public Set<Coordinate> getValidLocations(Player player) {
+        return getEmptyCoordinates().stream().filter(x -> isValid(x, player)).collect(Collectors.toSet());
+    }
+
+    private boolean isValid(Coordinate coordinate, Player player) {
+        return flippedSpots(coordinate, player) > 0;
+    }
+
+    private int flippedSpots(Coordinate coordinate, Player player) {
+        return 0;
     }
 }
