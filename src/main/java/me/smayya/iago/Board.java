@@ -1,20 +1,20 @@
 package me.smayya.iago;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Board {
     private static final String EMPTY_CHARACTER = ".";
     private static final int DEFAULT_ROWS = 8;
     private static final int DEFAULT_COLUMNS = 8;
+    private static final String[] DIRECTIONS = {"up", "down", "left", "right", "upleft", "upright", "downleft", "downright"};
     private final int rows;
     private final int columns;
     private final int size;
     private String board;
     private final Map<String, Integer> counts;
+    private final Set<Coordinate> coordinates;
+    private final Map<String, List<Coordinate>[]> relationships;
 
     public Board(int rows, int columns, String board) {
         this.rows = rows;
@@ -22,6 +22,8 @@ public class Board {
         this.size = rows * columns;
         this.board = board;
         this.counts = initializeCounts(board);
+        this.coordinates = initializeCoordinates(rows, columns);
+        this.relationships = initializeRelationships(coordinates);
     }
 
     public Board(int rows, int columns) {
@@ -112,5 +114,112 @@ public class Board {
             counts.put(cString, counts.getOrDefault(cString, 0) + 1);
         }
         return counts;
+    }
+
+    private static Set<Coordinate> initializeCoordinates(int rows, int columns) {
+        Set<Coordinate> coordinates = new HashSet<>();
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                coordinates.add(new Coordinate(i, j));
+            }
+        }
+        return coordinates;
+    }
+
+    private Map<String, List<Coordinate>[]> initializeRelationships(Set<Coordinate> coordinates) {
+        Map<String, List<Coordinate>[]> relationships = new HashMap<>();
+        ArrayList<List<Coordinate>[]> relationsArrayList = new ArrayList<>();
+        relationsArrayList.add(initializeUps(coordinates, rows));
+        relationsArrayList.add(initializeDowns(coordinates, rows));
+        relationsArrayList.add(initializeLefts(coordinates, rows));
+        relationsArrayList.add(initializeRights(coordinates, rows));
+        relationsArrayList.add(initializeUpLefts(coordinates, rows));
+        relationsArrayList.add(initializeUpRights(coordinates, rows));
+        relationsArrayList.add(initializeDownLefts(coordinates, rows));
+        relationsArrayList.add(initializeDownRights(coordinates, rows));
+        for (int i = 0; i < relationsArrayList.size(); i++) {
+            relationships.put(DIRECTIONS[i], relationsArrayList.get(i));
+        }
+        return relationships;
+    }
+
+    private static List<Coordinate>[] initializeUps(Set<Coordinate> coordinates, int rows) {
+        List<Coordinate>[] relations = new List[coordinates.size()];
+        for (Coordinate coordinate:
+             coordinates) {
+            int index = Coordinate.getIndexFromCoordinate(coordinate, rows);
+            relations[index] = coordinates.stream().filter(coordinate::isUp).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+        }
+        return relations;
+    }
+
+    private static List<Coordinate>[] initializeDowns(Set<Coordinate> coordinates, int rows) {
+        List<Coordinate>[] relations = new List[coordinates.size()];
+        for (Coordinate coordinate:
+                coordinates) {
+            int index = Coordinate.getIndexFromCoordinate(coordinate, rows);
+            relations[index] = coordinates.stream().filter(coordinate::isDown).sorted(Comparator.naturalOrder()).collect(Collectors.toList());
+        }
+        return relations;
+    }
+
+    private static List<Coordinate>[] initializeLefts(Set<Coordinate> coordinates, int rows) {
+        List<Coordinate>[] relations = new List[coordinates.size()];
+        for (Coordinate coordinate:
+                coordinates) {
+            int index = Coordinate.getIndexFromCoordinate(coordinate, rows);
+            relations[index] = coordinates.stream().filter(coordinate::isLeft).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+        }
+        return relations;
+    }
+
+    private static List<Coordinate>[] initializeRights(Set<Coordinate> coordinates, int rows) {
+        List<Coordinate>[] relations = new List[coordinates.size()];
+        for (Coordinate coordinate:
+                coordinates) {
+            int index = Coordinate.getIndexFromCoordinate(coordinate, rows);
+            relations[index] = coordinates.stream().filter(coordinate::isRight).sorted(Comparator.naturalOrder()).collect(Collectors.toList());
+        }
+        return relations;
+    }
+
+    private static List<Coordinate>[] initializeUpLefts(Set<Coordinate> coordinates, int rows) {
+        List<Coordinate>[] relations = new List[coordinates.size()];
+        for (Coordinate coordinate:
+                coordinates) {
+            int index = Coordinate.getIndexFromCoordinate(coordinate, rows);
+            relations[index] = coordinates.stream().filter(coordinate::isUpLeft).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+        }
+        return relations;
+    }
+
+    private static List<Coordinate>[] initializeUpRights(Set<Coordinate> coordinates, int rows) {
+        List<Coordinate>[] relations = new List[coordinates.size()];
+        for (Coordinate coordinate:
+                coordinates) {
+            int index = Coordinate.getIndexFromCoordinate(coordinate, rows);
+            relations[index] = coordinates.stream().filter(coordinate::isUpRight).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+        }
+        return relations;
+    }
+
+    private static List<Coordinate>[] initializeDownLefts(Set<Coordinate> coordinates, int rows) {
+        List<Coordinate>[] relations = new List[coordinates.size()];
+        for (Coordinate coordinate:
+                coordinates) {
+            int index = Coordinate.getIndexFromCoordinate(coordinate, rows);
+            relations[index] = coordinates.stream().filter(coordinate::isDownLeft).sorted(Comparator.naturalOrder()).collect(Collectors.toList());
+        }
+        return relations;
+    }
+
+    private static List<Coordinate>[] initializeDownRights(Set<Coordinate> coordinates, int rows) {
+        List<Coordinate>[] relations = new List[coordinates.size()];
+        for (Coordinate coordinate:
+                coordinates) {
+            int index = Coordinate.getIndexFromCoordinate(coordinate, rows);
+            relations[index] = coordinates.stream().filter(coordinate::isDownRight).sorted(Comparator.naturalOrder()).collect(Collectors.toList());
+        }
+        return relations;
     }
 }
