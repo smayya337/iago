@@ -60,13 +60,13 @@ public class Board {
     }
 
     public Set<Coordinate> getEmptyCoordinates() {
-        Set<Coordinate> emptyCoordinates = new HashSet<>();
-        for (int i = 0; i < size; i++) {
-            if (board.charAt(i) == EMPTY_CHARACTER.charAt(0)) {
-                emptyCoordinates.add(Coordinate.getCoordinateFromIndex(i, rows));
-            }
-        }
-        return emptyCoordinates;
+        return coordinates.stream().filter(this::isEmpty).collect(Collectors.toSet());
+    }
+
+    private boolean isEmpty(Coordinate coordinate) {
+        int index = Coordinate.getIndexFromCoordinate(coordinate, rows);
+        String value = String.valueOf(board.charAt(index));
+        return value.equals(EMPTY_CHARACTER);
     }
 
     public Set<Coordinate> getValidLocations(Player player) {
