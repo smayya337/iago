@@ -15,6 +15,7 @@ public class Board {
     private final Map<String, List<Coordinate>[]> relationships;
 
     public Board(int sideLength, String board) {
+        checkSideLength(sideLength);
         this.sideLength = sideLength;
         this.size = sideLength * sideLength;
         this.board = board;
@@ -29,6 +30,23 @@ public class Board {
 
     public Board() {
         this(DEFAULT_SIDE_LENGTH);
+    }
+
+    private void checkSideLength(int sideLength) {
+        checkSideLengthIsEven(sideLength);
+        checkSideLengthIsAtLeastFour(sideLength);
+    }
+
+    private void checkSideLengthIsEven(int sideLength) {
+        if (sideLength % 2 == 1) {
+            throw new IllegalArgumentException("Cannot create board with an odd side length!");
+        }
+    }
+
+    private void checkSideLengthIsAtLeastFour(int sideLength) {
+        if (sideLength < 4) {
+            throw new IllegalArgumentException("Cannot create board with a side length of less than 4!");
+        }
     }
 
     public int getSideLength() {
