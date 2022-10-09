@@ -3,7 +3,7 @@ package me.smayya.iago;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Board {
+public class Board implements Cloneable {
     private static final String EMPTY_CHARACTER = ".";
     private static final int DEFAULT_SIDE_LENGTH = 8;
     private static final String[] DIRECTIONS = {"up", "down", "left", "right", "upleft", "upright", "downleft", "downright"};
@@ -266,5 +266,23 @@ public class Board {
     public String getTokenAtCoordinate(Coordinate coordinate) {
         int index = Coordinate.getIndexFromCoordinate(coordinate, sideLength);
         return String.valueOf(board.charAt(index));
+    }
+
+    @Override
+    public Board clone() {
+        return new Board(sideLength, board);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Board board1 = (Board) o;
+        return Objects.equals(board, board1.board);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(board);
     }
 }
