@@ -1,9 +1,20 @@
 package me.smayya.iago;
 
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+
 public class EasyStrategy extends Strategy {
     @Override
     public Coordinate getMove(Board board, Player player) {
-        return board.getValidLocations(player).stream().sorted((x1,x2) -> score(board.clone().move(x2, player)) - score(board.clone().move(x1, player))).limit(1);
+        Map<Coordinate, Double> scores = new HashMap<>();
+        for (Coordinate coordinate:
+             board.getValidLocations(player)) {
+            Board newBoard = board.clone();
+            newBoard.move(coordinate, player);
+            scores.put(coordinate, score(newBoard, player));
+        }
+        return scores.keySet().stream().max(Comparator.comparingDouble(scores::get)).orElseThrow();
     }
 
     private double score(Board board, Player player) {
