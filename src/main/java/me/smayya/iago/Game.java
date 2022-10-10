@@ -1,25 +1,50 @@
 package me.smayya.iago;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Game {
-    private Board board;
-    public Game(Board board) {
+    private final Board board;
+    private final Map<Player, Strategy> players;
+    private Player currentPlayer;
+
+    public Game(Board board, Strategy player1, Strategy player2) {
         this.board = board;
+        this.players = initializePlayers(player1, player2);
+        currentPlayer = Player.WHITE;
     }
 
-    public Game() {
-        this(new Board());
+    public Game(Strategy player1, Strategy player2) {
+        this(new Board(), player1, player2);
+    }
+
+    private Map<Player, Strategy> initializePlayers(Strategy player1, Strategy player2) {
+        Map<Player, Strategy> players = new HashMap<>();
+        players.put(Player.WHITE, player1);
+        players.put(Player.BLACK, player2);
+        return players;
     }
 
     public Board getBoard() {
         return board;
     }
 
+    public Map<Player, Strategy> getPlayers() {
+        return players;
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public Strategy getPlayerStrategy(Player player) {
+        return players.get(player);
+    }
+
     public boolean isOver() {
         int occupiedSpaces = 0;
-        for (Player player:
-             Player.values()) {
+        for (Player player : Player.values()) {
             int playerSpaces = board.getCount(player);
             if (playerSpaces == 0) {
                 return true;
@@ -39,5 +64,23 @@ public class Game {
             throw new RuntimeException("Game is already over!");
         }
         board.move(coordinate, player);
+        swapPlayers();
+    }
+
+    public void move(Player player) {
+        Strategy strategy = players.get(player);
+        if (strategy == null) {
+            throw new RuntimeException("Player " + player.name() + " is not controlled by the AI!");
+        }
+        Coordinate coordinate = strategy.getMove(board, player);
+        move(coordinate, player);
+    }
+
+    private void swapPlayers() {
+        if (currentPlayer.equals(Player.WHITE)) {
+            currentPlayer = Player.BLACK;
+        } else {
+            currentPlayer = Player.WHITE;
+        }
     }
 }
