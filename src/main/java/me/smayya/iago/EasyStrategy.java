@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class EasyStrategy extends Strategy {
+    private static final double CORNER_POINTS = 4;
+    private static final double EDGE_POINTS = 2;
+    private  static final double NORMAL_POINTS = 1;
     @Override
     public Coordinate getMove(Board board, Player player) {
         Map<Coordinate, Double> scores = new HashMap<>();
@@ -24,13 +27,13 @@ public class EasyStrategy extends Strategy {
             Coordinate coordinate = Coordinate.getCoordinateFromIndex(i, sideLength);
             if (board.getTokenAtCoordinate(coordinate).equals(player.getToken())) {
                 if (isCorner(board, i)) {
-                    total += 3;
+                    total += CORNER_POINTS;
                 }
                 else if (isEdge(board, i)) {
-                    total += 2;
+                    total += EDGE_POINTS;
                 }
                 else {
-                    total += 1;
+                    total += NORMAL_POINTS;
                 }
             }
         }
