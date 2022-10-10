@@ -309,4 +309,8 @@ public class Board implements Cloneable {
     public int hashCode() {
         return Objects.hash(board);
     }
+
+    public int getCount(Player player) {
+        return counts.get(player.getToken());
+    }
 }
