@@ -1,5 +1,6 @@
 package me.smayya.iago;
 
+import java.sql.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -25,7 +26,7 @@ public class Board implements Cloneable {
     }
 
     public Board(int sideLength) {
-        this(sideLength, createEmptyBoard(sideLength));
+        this(sideLength, createEmptyBoard(sideLength, Player.WHITE, Player.BLACK));
     }
 
     public Board() {
@@ -61,13 +62,36 @@ public class Board implements Cloneable {
         return board;
     }
 
-    private static String createEmptyBoard(int sideLength) {
+    private static String createEmptyBoard(int sideLength, Player player1, Player player2) {
         int size = sideLength * sideLength;
+        ArrayList<Integer> populatedIndices = getPopulatedSpaces(sideLength);
         String board = "";
         for (int i = 0; i < size; i++) {
-            board += EMPTY_CHARACTER;
+            if (populatedIndices.contains(i)) {
+                Coordinate coordinate = Coordinate.getCoordinateFromIndex(i, sideLength);
+                if (coordinate.getRow() == coordinate.getColumn()) {
+                    board += player1.getToken();
+                }
+                else {
+                    board += player2.getToken();
+                }
+            }
+            else {
+                board += EMPTY_CHARACTER;
+            }
         }
         return board;
+    }
+
+    private static ArrayList<Integer> getPopulatedSpaces(int sideLength) {
+        int middle = sideLength / 2;
+        ArrayList<Integer> populatedIndices = new ArrayList<>();
+        for (int i = middle - 1; i <= middle; i++) {
+            for (int j = middle - 1; j <= middle; j++) {
+                populatedIndices.add(Coordinate.getIndexFromCoordinate(new Coordinate(i, j), sideLength));
+            }
+        }
+        return populatedIndices;
     }
 
     public Set<Coordinate> getEmptyCoordinates() {
