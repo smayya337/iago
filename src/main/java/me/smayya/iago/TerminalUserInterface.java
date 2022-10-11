@@ -51,10 +51,12 @@ public class TerminalUserInterface extends UserInterface {
 
     public Coordinate getUserCoordinates() {
         Scanner sc = new Scanner(System.in);
-        System.out.print("Input coordinates row,column of your move (top left is 1,1): ");
-        String[] coordinateStrings = sc.nextLine().split(",");
-        int row = Integer.parseInt(coordinateStrings[0].trim()) + 1;
-        int column = Integer.parseInt(coordinateStrings[1].trim()) + 1;
+        System.out.print("Row to place tile (top row is 1): ");
+        int row = sc.nextInt() - 1;
+        System.out.println();
+        System.out.print("Column to place tile (left-most column is 1): ");
+        int column = sc.nextInt() - 1;
+        System.out.println();
         return new Coordinate(row, column);
     }
 }
