@@ -6,12 +6,11 @@ import java.util.stream.Collectors;
 public class Board implements Cloneable {
     private static final String EMPTY_CHARACTER = ".";
     private static final int DEFAULT_SIDE_LENGTH = 8;
-    protected static final String[] DIRECTIONS = {"up", "down", "left", "right", "upleft", "upright", "downleft", "downright"};
     private final int sideLength;
     private final int size;
     private final Map<String, Integer> counts;
     private final Set<Coordinate> coordinates;
-    private final Map<String, List<Coordinate>[]> relationships;
+    private final Map<Direction, List<Coordinate>[]> relationships;
     private String board;
 
     public Board(int sideLength, String board) {
@@ -132,7 +131,7 @@ public class Board implements Cloneable {
     private Set<Coordinate> flippedSpots(Coordinate coordinate, Player player) {
         int index = Coordinate.getIndexFromCoordinate(coordinate, sideLength);
         Set<Coordinate> spots = new HashSet<>();
-        for (String direction :
+        for (Direction direction :
                 relationships.keySet()) {
             List<Coordinate> potentialSpots = relationships.get(direction)[index];
             spots.addAll(flippedSpotsInList(potentialSpots, player));

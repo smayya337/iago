@@ -76,8 +76,8 @@ public class BoardRelationships {
         return relations;
     }
 
-    public static Map<String, List<Coordinate>[]> initializeRelationships(Set<Coordinate> coordinates, int sideLength) {
-        Map<String, List<Coordinate>[]> relationships = new HashMap<>();
+    public static Map<Direction, List<Coordinate>[]> initializeRelationships(Set<Coordinate> coordinates, int sideLength) {
+        Map<Direction, List<Coordinate>[]> relationships = new HashMap<>();
         ArrayList<List<Coordinate>[]> relationsArrayList = new ArrayList<>();
         relationsArrayList.add(initializeUps(coordinates, sideLength));
         relationsArrayList.add(initializeDowns(coordinates, sideLength));
@@ -87,8 +87,9 @@ public class BoardRelationships {
         relationsArrayList.add(initializeUpRights(coordinates, sideLength));
         relationsArrayList.add(initializeDownLefts(coordinates, sideLength));
         relationsArrayList.add(initializeDownRights(coordinates, sideLength));
+        Direction[] directions = Direction.values();
         for (int i = 0; i < relationsArrayList.size(); i++) {
-            relationships.put(Board.DIRECTIONS[i], relationsArrayList.get(i));
+            relationships.put(directions[i], relationsArrayList.get(i));
         }
         return relationships;
     }
