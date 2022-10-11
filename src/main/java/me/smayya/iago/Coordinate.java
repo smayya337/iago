@@ -11,14 +11,6 @@ public class Coordinate implements Comparable<Coordinate> {
         this.column = column;
     }
 
-    public int getRow() {
-        return row;
-    }
-
-    public int getColumn() {
-        return column;
-    }
-
     public static int getIndexFromCoordinate(Coordinate coordinate, int rows) {
         int startOfRow = coordinate.getRow() * rows;
         return startOfRow + coordinate.getColumn();
@@ -28,6 +20,14 @@ public class Coordinate implements Comparable<Coordinate> {
         int rowNumber = index / rows;
         int columnNumber = index % rows;
         return new Coordinate(rowNumber, columnNumber);
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getColumn() {
+        return column;
     }
 
     @Override
@@ -47,11 +47,9 @@ public class Coordinate implements Comparable<Coordinate> {
     public int compareTo(Coordinate o) {
         if (row < o.getRow()) {
             return -1;
-        }
-        else if (row > o.getRow()) {
+        } else if (row > o.getRow()) {
             return 1;
-        }
-        else {
+        } else {
             return Integer.compare(column, o.getColumn());
         }
     }
