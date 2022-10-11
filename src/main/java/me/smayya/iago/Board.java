@@ -13,6 +13,15 @@ public class Board implements Cloneable {
     private final Map<Direction, List<Coordinate>[]> relationships;
     private String board;
 
+    private Board(int sideLength, String board, int size, Map<String, Integer> counts, Set<Coordinate> coordinates, Map<Direction, List<Coordinate>[]> relationships) {
+        this.sideLength = sideLength;
+        this.size = size;
+        this.board = board;
+        this.counts = counts;
+        this.coordinates = coordinates;
+        this.relationships = relationships;
+    }
+
     public Board(int sideLength, String board) {
         checkSideLength(sideLength);
         this.sideLength = sideLength;
@@ -193,7 +202,7 @@ public class Board implements Cloneable {
 
     @Override
     public Board clone() {
-        return new Board(sideLength, board);
+        return new Board(sideLength, board, size, counts, coordinates, relationships);
     }
 
     @Override
