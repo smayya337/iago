@@ -18,4 +18,25 @@ public class CoordinateTest {
         Coordinate coordinate2 = new Coordinate(0, 0);
         assertEquals(coordinate1.hashCode(), coordinate2.hashCode());
     }
+
+    @Test
+    public void testCoordinateToIndex() {
+        int coordinateRow = 4;
+        int coordinateColumn = 4;
+        Coordinate coordinate = new Coordinate(coordinateRow, coordinateColumn);
+        int boardRows = 8;
+        int expectedIndex = coordinateRow * boardRows + coordinateColumn;
+        assertEquals(expectedIndex, Coordinate.getIndexFromCoordinate(coordinate, boardRows));
+    }
+
+    @Test
+    public void testIndexToCoordinate() {
+        int coordinateRow = 4;
+        int coordinateColumn = 4;
+        Coordinate coordinate1 = new Coordinate(coordinateRow, coordinateColumn);
+        int boardRows = 8;
+        int index = coordinateRow * boardRows + coordinateColumn;
+        Coordinate coordinate2 = Coordinate.getCoordinateFromIndex(index, boardRows);
+        assertEquals(coordinate1, coordinate2);
+    }
 }
