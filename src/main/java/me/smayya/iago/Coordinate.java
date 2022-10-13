@@ -71,18 +71,18 @@ public class Coordinate implements Comparable<Coordinate> {
     }
 
     public boolean isUpLeft(Coordinate coordinate) {
-        return row - coordinate.getRow() == column - coordinate.getColumn() && coordinate.getRow() > row && coordinate.getColumn() > column;
+        return Math.abs(row - coordinate.getRow()) == Math.abs(column - coordinate.getColumn()) && coordinate.getRow() > row && coordinate.getColumn() > column;
     }
 
     public boolean isUpRight(Coordinate coordinate) {
-        return row - coordinate.getRow() == column - coordinate.getColumn() && coordinate.getRow() > row && coordinate.getColumn() < column;
+        return Math.abs(row - coordinate.getRow()) == Math.abs(column - coordinate.getColumn()) && coordinate.getRow() > row && coordinate.getColumn() < column;
     }
 
     public boolean isDownLeft(Coordinate coordinate) {
-        return row - coordinate.getRow() == column - coordinate.getColumn() && coordinate.getRow() < row && coordinate.getColumn() > column;
+        return Math.abs(row - coordinate.getRow()) == Math.abs(column - coordinate.getColumn()) && coordinate.getRow() < row && coordinate.getColumn() > column;
     }
 
     public boolean isDownRight(Coordinate coordinate) {
-        return row - coordinate.getRow() == column - coordinate.getColumn() && coordinate.getRow() < row && coordinate.getColumn() < column;
+        return Math.abs(row - coordinate.getRow()) == Math.abs(column - coordinate.getColumn()) && coordinate.getRow() < row && coordinate.getColumn() < column;
     }
 }
