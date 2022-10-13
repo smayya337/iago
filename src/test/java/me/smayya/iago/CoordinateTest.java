@@ -103,4 +103,18 @@ public class CoordinateTest {
         assertFalse(coordinate1.isRight(coordinate2));
         assertTrue(coordinate1.isDownRight(coordinate2));
     }
+
+    @Test
+    public void testCompareToDifferentRows() {
+        Coordinate coordinate1 = new Coordinate(3, 7);
+        Coordinate coordinate2 = new Coordinate(4, 0);
+        assertEquals(-1, coordinate1.compareTo(coordinate2));
+    }
+
+    @Test
+    public void testCompareToSameRows() {
+        Coordinate coordinate1 = new Coordinate(4, 0);
+        Coordinate coordinate2 = new Coordinate(4, 1);
+        assertEquals(-1, coordinate1.compareTo(coordinate2));
+    }
 }
