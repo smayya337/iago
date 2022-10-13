@@ -11,4 +11,11 @@ public class CoordinateTest {
         Coordinate coordinate2 = new Coordinate(0, 0);
         assertEquals(coordinate1, coordinate2);
     }
+
+    @Test
+    public void checkCoordinateSameHash() {
+        Coordinate coordinate1 = new Coordinate(0, 0);
+        Coordinate coordinate2 = new Coordinate(0, 0);
+        assertEquals(coordinate1.hashCode(), coordinate2.hashCode());
+    }
 }
