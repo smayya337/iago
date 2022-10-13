@@ -63,11 +63,11 @@ public class Coordinate implements Comparable<Coordinate> {
     }
 
     public boolean isLeft(Coordinate coordinate) {
-        return row == coordinate.getRow() && coordinate.getColumn() > row;
+        return row == coordinate.getRow() && coordinate.getColumn() > column;
     }
 
     public boolean isRight(Coordinate coordinate) {
-        return row == coordinate.getRow() && coordinate.getColumn() < row;
+        return row == coordinate.getRow() && coordinate.getColumn() < column;
     }
 
     public boolean isUpLeft(Coordinate coordinate) {
