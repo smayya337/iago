@@ -8,7 +8,7 @@ public class BoardRelationships {
         List<Coordinate>[] relations = new List[coordinates.size()];
         for (Coordinate coordinate : coordinates) {
             int index = Coordinate.getIndexFromCoordinate(coordinate, sideLength);
-            relations[index] = coordinates.stream().filter(coordinate::isUp).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+            relations[index] = coordinates.stream().filter(x -> x.isUp(coordinate)).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
         }
         return relations;
     }
@@ -17,7 +17,7 @@ public class BoardRelationships {
         List<Coordinate>[] relations = new List[coordinates.size()];
         for (Coordinate coordinate : coordinates) {
             int index = Coordinate.getIndexFromCoordinate(coordinate, sideLength);
-            relations[index] = coordinates.stream().filter(coordinate::isDown).sorted(Comparator.naturalOrder()).collect(Collectors.toList());
+            relations[index] = coordinates.stream().filter(x -> x.isDown(coordinate)).sorted(Comparator.naturalOrder()).collect(Collectors.toList());
         }
         return relations;
     }
@@ -26,7 +26,7 @@ public class BoardRelationships {
         List<Coordinate>[] relations = new List[coordinates.size()];
         for (Coordinate coordinate : coordinates) {
             int index = Coordinate.getIndexFromCoordinate(coordinate, sideLength);
-            relations[index] = coordinates.stream().filter(coordinate::isLeft).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+            relations[index] = coordinates.stream().filter(x -> x.isLeft(coordinate)).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
         }
         return relations;
     }
@@ -35,7 +35,7 @@ public class BoardRelationships {
         List<Coordinate>[] relations = new List[coordinates.size()];
         for (Coordinate coordinate : coordinates) {
             int index = Coordinate.getIndexFromCoordinate(coordinate, sideLength);
-            relations[index] = coordinates.stream().filter(coordinate::isRight).sorted(Comparator.naturalOrder()).collect(Collectors.toList());
+            relations[index] = coordinates.stream().filter(x -> x.isRight(coordinate)).sorted(Comparator.naturalOrder()).collect(Collectors.toList());
         }
         return relations;
     }
@@ -44,7 +44,7 @@ public class BoardRelationships {
         List<Coordinate>[] relations = new List[coordinates.size()];
         for (Coordinate coordinate : coordinates) {
             int index = Coordinate.getIndexFromCoordinate(coordinate, sideLength);
-            relations[index] = coordinates.stream().filter(coordinate::isUpLeft).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+            relations[index] = coordinates.stream().filter(x -> x.isUpLeft(coordinate)).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
         }
         return relations;
     }
@@ -62,7 +62,7 @@ public class BoardRelationships {
         List<Coordinate>[] relations = new List[coordinates.size()];
         for (Coordinate coordinate : coordinates) {
             int index = Coordinate.getIndexFromCoordinate(coordinate, sideLength);
-            relations[index] = coordinates.stream().filter(coordinate::isDownLeft).sorted(Comparator.naturalOrder()).collect(Collectors.toList());
+            relations[index] = coordinates.stream().filter(x -> x.isDownLeft(coordinate)).sorted(Comparator.naturalOrder()).collect(Collectors.toList());
         }
         return relations;
     }
@@ -71,7 +71,7 @@ public class BoardRelationships {
         List<Coordinate>[] relations = new List[coordinates.size()];
         for (Coordinate coordinate : coordinates) {
             int index = Coordinate.getIndexFromCoordinate(coordinate, sideLength);
-            relations[index] = coordinates.stream().filter(coordinate::isDownRight).sorted(Comparator.naturalOrder()).collect(Collectors.toList());
+            relations[index] = coordinates.stream().filter(x -> x.isDownRight(coordinate)).sorted(Comparator.naturalOrder()).collect(Collectors.toList());
         }
         return relations;
     }
