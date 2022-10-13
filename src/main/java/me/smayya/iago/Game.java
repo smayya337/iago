@@ -12,7 +12,7 @@ public class Game {
     public Game(Board board, Strategy player1, Strategy player2) {
         this.board = board;
         this.players = initializePlayers(player1, player2);
-        currentPlayer = Player.WHITE;
+        currentPlayer = Player.BLACK;
     }
 
     public Game(Strategy player1, Strategy player2) {
@@ -21,8 +21,8 @@ public class Game {
 
     private Map<Player, Strategy> initializePlayers(Strategy player1, Strategy player2) {
         Map<Player, Strategy> players = new HashMap<>();
-        players.put(Player.WHITE, player1);
-        players.put(Player.BLACK, player2);
+        players.put(Player.BLACK, player1);
+        players.put(Player.WHITE, player2);
         return players;
     }
 
