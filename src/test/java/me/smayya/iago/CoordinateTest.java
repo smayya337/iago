@@ -46,4 +46,25 @@ public class CoordinateTest {
         Coordinate coordinate2 = new Coordinate(4, 4);
         assertTrue(coordinate1.isUp(coordinate2));
     }
+
+    @Test
+    public void testDown() {
+        Coordinate coordinate1 = new Coordinate(4, 4);
+        Coordinate coordinate2 = new Coordinate(3, 4);
+        assertTrue(coordinate1.isDown(coordinate2));
+    }
+
+    @Test
+    public void testLeft() {
+        Coordinate coordinate1 = new Coordinate(4, 3);
+        Coordinate coordinate2 = new Coordinate(4, 4);
+        assertTrue(coordinate1.isLeft(coordinate2));
+    }
+
+    @Test
+    public void testRight() {
+        Coordinate coordinate1 = new Coordinate(4, 4);
+        Coordinate coordinate2 = new Coordinate(4, 3);
+        assertTrue(coordinate1.isRight(coordinate2));
+    }
 }
