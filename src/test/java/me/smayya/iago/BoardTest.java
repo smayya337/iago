@@ -24,4 +24,10 @@ public class BoardTest {
         Board newBoard = board.clone();
         assertEquals(board, newBoard);
     }
+
+    @Test
+    public void testHashCode() {
+        Board newBoard = new Board();
+        assertEquals(board.hashCode(), newBoard.hashCode());
+    }
 }
