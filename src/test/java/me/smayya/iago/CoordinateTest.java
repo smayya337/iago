@@ -39,4 +39,11 @@ public class CoordinateTest {
         Coordinate coordinate2 = Coordinate.getCoordinateFromIndex(index, boardRows);
         assertEquals(coordinate1, coordinate2);
     }
+
+    @Test
+    public void testUp() {
+        Coordinate coordinate1 = new Coordinate(3, 4);
+        Coordinate coordinate2 = new Coordinate(4, 4);
+        assertTrue(coordinate1.isUp(coordinate2));
+    }
 }
