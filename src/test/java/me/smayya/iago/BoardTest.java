@@ -16,4 +16,10 @@ public class BoardTest {
         assertEquals(Board.DEFAULT_SIDE_LENGTH, sideLength);
         // TODO: add more stuff - make methods/fields protected?
     }
+
+    @Test
+    public void testCloneEquals() {
+        Board newBoard = board.clone();
+        assertEquals(board, newBoard);
+    }
 }
