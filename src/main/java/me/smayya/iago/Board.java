@@ -4,8 +4,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Board implements Cloneable {
-    private static final String EMPTY_CHARACTER = ".";
-    private static final int DEFAULT_SIDE_LENGTH = 8;
+    protected static final String EMPTY_CHARACTER = ".";
+    protected static final int DEFAULT_SIDE_LENGTH = 8;
     private final int sideLength;
     private final int size;
     private final Map<String, Integer> counts;
