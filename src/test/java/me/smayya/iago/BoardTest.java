@@ -14,6 +14,8 @@ public class BoardTest {
     public void testNoArgConstructor() {
         int sideLength = board.getSideLength();
         assertEquals(Board.DEFAULT_SIDE_LENGTH, sideLength);
+        int size = sideLength * sideLength;
+        assertEquals(size, board.getSize());
         // TODO: add more stuff - make methods/fields protected?
     }
 
