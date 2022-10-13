@@ -33,7 +33,7 @@ public class Board implements Cloneable {
     }
 
     public Board(int sideLength) {
-        this(sideLength, createEmptyBoard(sideLength, Player.WHITE, Player.BLACK));
+        this(sideLength, createEmptyBoard(sideLength, Player.BLACK, Player.WHITE));
     }
 
     public Board() {
