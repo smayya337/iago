@@ -3,12 +3,6 @@ package me.smayya.iago;
 import java.util.Scanner;
 
 public class TerminalUserInterface extends UserInterface {
-    private static final String TOP_LEFT_CORNER = "┌";
-    private static final String TOP_RIGHT_CORNER = "┐";
-    private static final String BOTTOM_LEFT_CORNER = "└";
-    private static final String BOTTOM_RIGHT_CORNER = "┘";
-    private static final String TOP_BOTTOM_CHARACTER = "─";
-    private static final String SIDE_CHARACTER = "│";
 
     public void display(Board board) {
         System.out.println(prettyPrintBoard(board));
@@ -17,12 +11,12 @@ public class TerminalUserInterface extends UserInterface {
         int sideLength = board.getSideLength();
         String outputString = topRow(sideLength);
         for (int row = 0; row < sideLength; row++) {
-            outputString += SIDE_CHARACTER;
+            outputString += TerminalBorder.SIDE_CHARACTER.getCharacter();
             for (int column = 0; column < sideLength; column++) {
                 Coordinate coordinate = new Coordinate(row, column);
                 outputString += board.getTokenAtCoordinate(coordinate);
             }
-            outputString += SIDE_CHARACTER;
+            outputString += TerminalBorder.SIDE_CHARACTER.getCharacter();
             if (row < sideLength - 1) {
                 outputString += "\n";
             }
@@ -32,20 +26,20 @@ public class TerminalUserInterface extends UserInterface {
     }
 
     private String topRow(int sideLength) {
-        String outputString = TOP_LEFT_CORNER;
+        String outputString = TerminalBorder.TOP_LEFT_CORNER.getCharacter();
         for(int i = 0; i < sideLength; i++) {
-            outputString += TOP_BOTTOM_CHARACTER;
+            outputString += TerminalBorder.TOP_BOTTOM_CHARACTER.getCharacter();
         }
-        outputString += TOP_RIGHT_CORNER;
+        outputString += TerminalBorder.TOP_RIGHT_CORNER.getCharacter();
         return outputString;
     }
 
     private String bottomRow(int sideLength) {
-        String outputString = BOTTOM_LEFT_CORNER;
+        String outputString = TerminalBorder.BOTTOM_LEFT_CORNER.getCharacter();
         for(int i = 0; i < sideLength; i++) {
-            outputString += TOP_BOTTOM_CHARACTER;
+            outputString += TerminalBorder.TOP_BOTTOM_CHARACTER.getCharacter();
         }
-        outputString += BOTTOM_RIGHT_CORNER;
+        outputString += TerminalBorder.BOTTOM_RIGHT_CORNER.getCharacter();
         return outputString;
     }
 
