@@ -43,15 +43,13 @@ public class Game {
     }
 
     public boolean isOver() {
-        int occupiedSpaces = 0;
         for (Player player : Player.values()) {
-            int playerSpaces = board.getCount(player);
-            if (playerSpaces == 0) {
-                return true;
+            int playerMoves = board.getValidLocations(player).size();
+            if (playerMoves > 0) {
+                return false;
             }
-            occupiedSpaces += playerSpaces;
         }
-        return occupiedSpaces == board.getSize();
+        return true;
     }
 
     public Player getWinner() {
