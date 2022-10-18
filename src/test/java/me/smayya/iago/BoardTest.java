@@ -12,11 +12,8 @@ public class BoardTest {
     }
     @Test
     public void testNoArgConstructor() {
-        int sideLength = board.getSideLength();
-        assertEquals(Board.DEFAULT_SIDE_LENGTH, sideLength);
-        int size = sideLength * sideLength;
-        assertEquals(size, board.getSize());
-        // TODO: add more stuff - make methods/fields protected?
+        String expected = "...........................xo......ox...........................";
+        assertEquals(expected, board.getBoard());
     }
 
     @Test
