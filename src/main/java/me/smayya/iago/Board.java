@@ -38,9 +38,9 @@ public class Board implements Cloneable {
             if (populatedIndices.contains(i)) {
                 Coordinate coordinate = Coordinate.getCoordinateFromIndex(i, SIDE_LENGTH);
                 if (coordinate.getRow() == coordinate.getColumn()) {
-                    board += Player.BLACK.getToken();
-                } else {
                     board += Player.WHITE.getToken();
+                } else {
+                    board += Player.BLACk.getToken();
                 }
             } else {
                 board += EMPTY_CHARACTER;

@@ -12,7 +12,7 @@ public class BoardTest {
     }
     @Test
     public void testNoArgConstructor() {
-        String expected = "...........................xo......ox...........................";
+        String expected = "...........................ox......xo...........................";
         assertEquals(expected, board.getBoard());
     }
 
