@@ -7,6 +7,7 @@ public class TerminalUserInterface extends UserInterface {
     public void display(Board board) {
         System.out.println(prettyPrintBoard(board));
     }
+
     public String prettyPrintBoard(Board board) {
         int sideLength = board.getSideLength();
         String outputString = topRow(sideLength);
@@ -27,7 +28,7 @@ public class TerminalUserInterface extends UserInterface {
 
     private String topRow(int sideLength) {
         String outputString = TerminalBorder.TOP_LEFT_CORNER.getCharacter();
-        for(int i = 0; i < sideLength; i++) {
+        for (int i = 0; i < sideLength; i++) {
             outputString += TerminalBorder.TOP_BOTTOM_CHARACTER.getCharacter();
         }
         outputString += TerminalBorder.TOP_RIGHT_CORNER.getCharacter();
@@ -36,7 +37,7 @@ public class TerminalUserInterface extends UserInterface {
 
     private String bottomRow(int sideLength) {
         String outputString = TerminalBorder.BOTTOM_LEFT_CORNER.getCharacter();
-        for(int i = 0; i < sideLength; i++) {
+        for (int i = 0; i < sideLength; i++) {
             outputString += TerminalBorder.TOP_BOTTOM_CHARACTER.getCharacter();
         }
         outputString += TerminalBorder.BOTTOM_RIGHT_CORNER.getCharacter();
@@ -52,5 +53,19 @@ public class TerminalUserInterface extends UserInterface {
         int column = sc.nextInt() - 1;
         System.out.println();
         return new Coordinate(row, column);
+    }
+
+    enum TerminalBorder {
+        TOP_LEFT_CORNER("┌"), TOP_RIGHT_CORNER("┐"), BOTTOM_LEFT_CORNER("└"), BOTTOM_RIGHT_CORNER("┘"), TOP_BOTTOM_CHARACTER("─"), SIDE_CHARACTER("│");
+
+        private final String character;
+
+        TerminalBorder(String character) {
+            this.character = character;
+        }
+
+        String getCharacter() {
+            return character;
+        }
     }
 }
