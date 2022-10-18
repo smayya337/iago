@@ -27,4 +27,12 @@ public class BoardTest {
         Board newBoard = new Board();
         assertEquals(board.hashCode(), newBoard.hashCode());
     }
+
+    @Test
+    public void testFlip() {
+        Coordinate coordinate = new Coordinate(3, 4);
+        board.move(coordinate, Player.BLACK);
+        String expected = "...................x.......xx......xo...........................";
+        assertEquals(expected, board.getBoard());
+    }
 }
