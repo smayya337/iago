@@ -1,19 +1,26 @@
 package me.smayya.iago;
 
-import java.sql.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class Board implements Cloneable {
-    private static final String EMPTY_CHARACTER = ".";
-    private static final int DEFAULT_SIDE_LENGTH = 8;
-    private static final String[] DIRECTIONS = {"up", "down", "left", "right", "upleft", "upright", "downleft", "downright"};
+    protected static final String EMPTY_CHARACTER = ".";
+    protected static final int DEFAULT_SIDE_LENGTH = 8;
     private final int sideLength;
     private final int size;
-    private String board;
     private final Map<String, Integer> counts;
     private final Set<Coordinate> coordinates;
-    private final Map<String, List<Coordinate>[]> relationships;
+    private final Map<Direction, List<Coordinate>[]> relationships;
+    private String board;
+
+    private Board(int sideLength, String board, int size, Map<String, Integer> counts, Set<Coordinate> coordinates, Map<Direction, List<Coordinate>[]> relationships) {
+        this.sideLength = sideLength;
+        this.size = size;
+        this.board = board;
+        this.counts = counts;
+        this.coordinates = coordinates;
+        this.relationships = relationships;
+    }
 
     public Board(int sideLength, String board) {
         checkSideLength(sideLength);
@@ -22,15 +29,65 @@ public class Board implements Cloneable {
         this.board = board;
         this.counts = initializeCounts(board);
         this.coordinates = initializeCoordinates(sideLength);
-        this.relationships = initializeRelationships(coordinates);
+        this.relationships = BoardRelationships.initializeRelationships(coordinates, sideLength);
     }
 
     public Board(int sideLength) {
-        this(sideLength, createEmptyBoard(sideLength, Player.WHITE, Player.BLACK));
+        this(sideLength, createEmptyBoard(sideLength, Player.BLACK, Player.WHITE));
     }
 
     public Board() {
         this(DEFAULT_SIDE_LENGTH);
+    }
+
+    private static String createEmptyBoard(int sideLength, Player player1, Player player2) {
+        int size = sideLength * sideLength;
+        ArrayList<Integer> populatedIndices = getPopulatedSpaces(sideLength);
+        String board = "";
+        for (int i = 0; i < size; i++) {
+            if (populatedIndices.contains(i)) {
+                Coordinate coordinate = Coordinate.getCoordinateFromIndex(i, sideLength);
+                if (coordinate.getRow() == coordinate.getColumn()) {
+                    board += player1.getToken();
+                } else {
+                    board += player2.getToken();
+                }
+            } else {
+                board += EMPTY_CHARACTER;
+            }
+        }
+        return board;
+    }
+
+    private static ArrayList<Integer> getPopulatedSpaces(int sideLength) {
+        int middle = sideLength / 2;
+        ArrayList<Integer> populatedIndices = new ArrayList<>();
+        for (int i = middle - 1; i <= middle; i++) {
+            for (int j = middle - 1; j <= middle; j++) {
+                populatedIndices.add(Coordinate.getIndexFromCoordinate(new Coordinate(i, j), sideLength));
+            }
+        }
+        return populatedIndices;
+    }
+
+    private static Map<String, Integer> initializeCounts(String board) {
+        Map<String, Integer> counts = new HashMap<>();
+        for (char c :
+                board.toCharArray()) {
+            String cString = String.valueOf(c);
+            counts.put(cString, counts.getOrDefault(cString, 0) + 1);
+        }
+        return counts;
+    }
+
+    private static Set<Coordinate> initializeCoordinates(int sideLength) {
+        Set<Coordinate> coordinates = new HashSet<>();
+        for (int i = 0; i < sideLength; i++) {
+            for (int j = 0; j < sideLength; j++) {
+                coordinates.add(new Coordinate(i, j));
+            }
+        }
+        return coordinates;
     }
 
     private void checkSideLength(int sideLength) {
@@ -62,38 +119,6 @@ public class Board implements Cloneable {
         return board;
     }
 
-    private static String createEmptyBoard(int sideLength, Player player1, Player player2) {
-        int size = sideLength * sideLength;
-        ArrayList<Integer> populatedIndices = getPopulatedSpaces(sideLength);
-        String board = "";
-        for (int i = 0; i < size; i++) {
-            if (populatedIndices.contains(i)) {
-                Coordinate coordinate = Coordinate.getCoordinateFromIndex(i, sideLength);
-                if (coordinate.getRow() == coordinate.getColumn()) {
-                    board += player1.getToken();
-                }
-                else {
-                    board += player2.getToken();
-                }
-            }
-            else {
-                board += EMPTY_CHARACTER;
-            }
-        }
-        return board;
-    }
-
-    private static ArrayList<Integer> getPopulatedSpaces(int sideLength) {
-        int middle = sideLength / 2;
-        ArrayList<Integer> populatedIndices = new ArrayList<>();
-        for (int i = middle - 1; i <= middle; i++) {
-            for (int j = middle - 1; j <= middle; j++) {
-                populatedIndices.add(Coordinate.getIndexFromCoordinate(new Coordinate(i, j), sideLength));
-            }
-        }
-        return populatedIndices;
-    }
-
     public Set<Coordinate> getEmptyCoordinates() {
         return coordinates.stream().filter(this::isEmpty).collect(Collectors.toSet());
     }
@@ -115,7 +140,7 @@ public class Board implements Cloneable {
     private Set<Coordinate> flippedSpots(Coordinate coordinate, Player player) {
         int index = Coordinate.getIndexFromCoordinate(coordinate, sideLength);
         Set<Coordinate> spots = new HashSet<>();
-        for (String direction :
+        for (Direction direction :
                 relationships.keySet()) {
             List<Coordinate> potentialSpots = relationships.get(direction)[index];
             spots.addAll(flippedSpotsInList(potentialSpots, player));
@@ -170,123 +195,6 @@ public class Board implements Cloneable {
         counts.put(key, counts.getOrDefault(key, 0) + difference);
     }
 
-    private static Map<String, Integer> initializeCounts(String board) {
-        Map<String, Integer> counts = new HashMap<>();
-        for (char c :
-                board.toCharArray()) {
-            String cString = String.valueOf(c);
-            counts.put(cString, counts.getOrDefault(cString, 0) + 1);
-        }
-        return counts;
-    }
-
-    private static Set<Coordinate> initializeCoordinates(int sideLength) {
-        Set<Coordinate> coordinates = new HashSet<>();
-        for (int i = 0; i < sideLength; i++) {
-            for (int j = 0; j < sideLength; j++) {
-                coordinates.add(new Coordinate(i, j));
-            }
-        }
-        return coordinates;
-    }
-
-    private Map<String, List<Coordinate>[]> initializeRelationships(Set<Coordinate> coordinates) {
-        Map<String, List<Coordinate>[]> relationships = new HashMap<>();
-        ArrayList<List<Coordinate>[]> relationsArrayList = new ArrayList<>();
-        relationsArrayList.add(initializeUps(coordinates, sideLength));
-        relationsArrayList.add(initializeDowns(coordinates, sideLength));
-        relationsArrayList.add(initializeLefts(coordinates, sideLength));
-        relationsArrayList.add(initializeRights(coordinates, sideLength));
-        relationsArrayList.add(initializeUpLefts(coordinates, sideLength));
-        relationsArrayList.add(initializeUpRights(coordinates, sideLength));
-        relationsArrayList.add(initializeDownLefts(coordinates, sideLength));
-        relationsArrayList.add(initializeDownRights(coordinates, sideLength));
-        for (int i = 0; i < relationsArrayList.size(); i++) {
-            relationships.put(DIRECTIONS[i], relationsArrayList.get(i));
-        }
-        return relationships;
-    }
-
-    private static List<Coordinate>[] initializeUps(Set<Coordinate> coordinates, int sideLength) {
-        List<Coordinate>[] relations = new List[coordinates.size()];
-        for (Coordinate coordinate :
-                coordinates) {
-            int index = Coordinate.getIndexFromCoordinate(coordinate, sideLength);
-            relations[index] = coordinates.stream().filter(coordinate::isUp).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
-        }
-        return relations;
-    }
-
-    private static List<Coordinate>[] initializeDowns(Set<Coordinate> coordinates, int sideLength) {
-        List<Coordinate>[] relations = new List[coordinates.size()];
-        for (Coordinate coordinate :
-                coordinates) {
-            int index = Coordinate.getIndexFromCoordinate(coordinate, sideLength);
-            relations[index] = coordinates.stream().filter(coordinate::isDown).sorted(Comparator.naturalOrder()).collect(Collectors.toList());
-        }
-        return relations;
-    }
-
-    private static List<Coordinate>[] initializeLefts(Set<Coordinate> coordinates, int sideLength) {
-        List<Coordinate>[] relations = new List[coordinates.size()];
-        for (Coordinate coordinate :
-                coordinates) {
-            int index = Coordinate.getIndexFromCoordinate(coordinate, sideLength);
-            relations[index] = coordinates.stream().filter(coordinate::isLeft).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
-        }
-        return relations;
-    }
-
-    private static List<Coordinate>[] initializeRights(Set<Coordinate> coordinates, int sideLength) {
-        List<Coordinate>[] relations = new List[coordinates.size()];
-        for (Coordinate coordinate :
-                coordinates) {
-            int index = Coordinate.getIndexFromCoordinate(coordinate, sideLength);
-            relations[index] = coordinates.stream().filter(coordinate::isRight).sorted(Comparator.naturalOrder()).collect(Collectors.toList());
-        }
-        return relations;
-    }
-
-    private static List<Coordinate>[] initializeUpLefts(Set<Coordinate> coordinates, int sideLength) {
-        List<Coordinate>[] relations = new List[coordinates.size()];
-        for (Coordinate coordinate :
-                coordinates) {
-            int index = Coordinate.getIndexFromCoordinate(coordinate, sideLength);
-            relations[index] = coordinates.stream().filter(coordinate::isUpLeft).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
-        }
-        return relations;
-    }
-
-    private static List<Coordinate>[] initializeUpRights(Set<Coordinate> coordinates, int sideLength) {
-        List<Coordinate>[] relations = new List[coordinates.size()];
-        for (Coordinate coordinate :
-                coordinates) {
-            int index = Coordinate.getIndexFromCoordinate(coordinate, sideLength);
-            relations[index] = coordinates.stream().filter(coordinate::isUpRight).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
-        }
-        return relations;
-    }
-
-    private static List<Coordinate>[] initializeDownLefts(Set<Coordinate> coordinates, int sideLength) {
-        List<Coordinate>[] relations = new List[coordinates.size()];
-        for (Coordinate coordinate :
-                coordinates) {
-            int index = Coordinate.getIndexFromCoordinate(coordinate, sideLength);
-            relations[index] = coordinates.stream().filter(coordinate::isDownLeft).sorted(Comparator.naturalOrder()).collect(Collectors.toList());
-        }
-        return relations;
-    }
-
-    private static List<Coordinate>[] initializeDownRights(Set<Coordinate> coordinates, int sideLength) {
-        List<Coordinate>[] relations = new List[coordinates.size()];
-        for (Coordinate coordinate :
-                coordinates) {
-            int index = Coordinate.getIndexFromCoordinate(coordinate, sideLength);
-            relations[index] = coordinates.stream().filter(coordinate::isDownRight).sorted(Comparator.naturalOrder()).collect(Collectors.toList());
-        }
-        return relations;
-    }
-
     public String getTokenAtCoordinate(Coordinate coordinate) {
         int index = Coordinate.getIndexFromCoordinate(coordinate, sideLength);
         return String.valueOf(board.charAt(index));
@@ -294,7 +202,7 @@ public class Board implements Cloneable {
 
     @Override
     public Board clone() {
-        return new Board(sideLength, board);
+        return new Board(sideLength, board, size, counts, coordinates, relationships);
     }
 
     @Override
