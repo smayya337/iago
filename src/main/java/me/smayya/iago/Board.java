@@ -33,14 +33,14 @@ public class Board implements Cloneable {
     }
 
     public Board(int sideLength) {
-        this(sideLength, createEmptyBoard(sideLength, Player.BLACK, Player.WHITE));
+        this(sideLength, createEmptyBoard(sideLength));
     }
 
     public Board() {
         this(DEFAULT_SIDE_LENGTH);
     }
 
-    private static String createEmptyBoard(int sideLength, Player player1, Player player2) {
+    private static String createEmptyBoard(int sideLength) {
         int size = sideLength * sideLength;
         ArrayList<Integer> populatedIndices = getPopulatedSpaces(sideLength);
         String board = "";
@@ -48,9 +48,9 @@ public class Board implements Cloneable {
             if (populatedIndices.contains(i)) {
                 Coordinate coordinate = Coordinate.getCoordinateFromIndex(i, sideLength);
                 if (coordinate.getRow() == coordinate.getColumn()) {
-                    board += player1.getToken();
+                    board += Player.BLACK.getToken();
                 } else {
-                    board += player2.getToken();
+                    board += Player.WHITE.getToken();
                 }
             } else {
                 board += EMPTY_CHARACTER;
