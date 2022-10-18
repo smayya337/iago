@@ -12,11 +12,8 @@ public class BoardTest {
     }
     @Test
     public void testNoArgConstructor() {
-        int sideLength = board.getSideLength();
-        assertEquals(Board.DEFAULT_SIDE_LENGTH, sideLength);
-        int size = sideLength * sideLength;
-        assertEquals(size, board.getSize());
-        // TODO: add more stuff - make methods/fields protected?
+        String expected = "...........................ox......xo...........................";
+        assertEquals(expected, board.getBoard());
     }
 
     @Test
@@ -29,5 +26,13 @@ public class BoardTest {
     public void testHashCode() {
         Board newBoard = new Board();
         assertEquals(board.hashCode(), newBoard.hashCode());
+    }
+
+    @Test
+    public void testFlip() {
+        Coordinate coordinate = new Coordinate(3, 4);
+        board.move(coordinate, Player.BLACK);
+        String expected = "...................x.......xx......xo...........................";
+        assertEquals(expected, board.getBoard());
     }
 }
