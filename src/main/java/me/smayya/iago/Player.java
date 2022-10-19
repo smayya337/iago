@@ -1,7 +1,7 @@
 package me.smayya.iago;
 
 public enum Player {
-    WHITE("x"), BLACK("o");
+    BLACK("x"), WHITE("o");
 
     private final String token;
 
