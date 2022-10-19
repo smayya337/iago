@@ -14,7 +14,7 @@ public class TerminalUserInterface extends UserInterface {
             display(game.getBoard());
             Player currentPlayer = game.getCurrentPlayer();
             Strategy currentStrategy = game.getPlayerStrategy(currentPlayer);
-            if (currentStrategy != null) {
+            if (currentStrategy == null) {
                 Coordinate playerMove = getUserCoordinates();
                 game.move(playerMove, currentPlayer);
             }
@@ -53,7 +53,7 @@ public class TerminalUserInterface extends UserInterface {
     }
 
     public String prettyPrintBoard(Board board) {
-        StringBuilder outputString = new StringBuilder(topRow());
+        StringBuilder outputString = new StringBuilder(topRow() + "\n");
         for (int row = 0; row < Board.SIDE_LENGTH; row++) {
             outputString.append(TerminalBorder.SIDE_CHARACTER.getCharacter());
             for (int column = 0; column < Board.SIDE_LENGTH; column++) {
