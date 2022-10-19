@@ -9,35 +9,30 @@ public class TerminalUserInterface extends UserInterface {
     }
 
     public String prettyPrintBoard(Board board) {
-        int sideLength = board.getSideLength();
-        String outputString = topRow();
-        for (int row = 0; row < sideLength; row++) {
-            outputString += TerminalBorder.SIDE_CHARACTER.getCharacter();
-            for (int column = 0; column < sideLength; column++) {
+        StringBuilder outputString = new StringBuilder(topRow());
+        for (int row = 0; row < Board.SIDE_LENGTH; row++) {
+            outputString.append(TerminalBorder.SIDE_CHARACTER.getCharacter());
+            for (int column = 0; column < Board.SIDE_LENGTH; column++) {
                 Coordinate coordinate = new Coordinate(row, column);
-                outputString += board.getTokenAtCoordinate(coordinate);
+                outputString.append(board.getTokenAtCoordinate(coordinate));
             }
-            outputString += TerminalBorder.SIDE_CHARACTER.getCharacter();
-            if (row < sideLength - 1) {
-                outputString += "\n";
+            outputString.append(TerminalBorder.SIDE_CHARACTER.getCharacter());
+            if (row < Board.SIDE_LENGTH - 1) {
+                outputString.append("\n");
             }
         }
-        outputString += bottomRow();
-        return outputString;
+        outputString.append(bottomRow());
+        return outputString.toString();
     }
 
     private String topRow() {
-        StringBuilder outputString = new StringBuilder(TerminalBorder.TOP_LEFT_CORNER.getCharacter());
-        outputString.append(String.valueOf(TerminalBorder.TOP_BOTTOM_CHARACTER.getCharacter()).repeat(Board.SIDE_LENGTH));
-        outputString.append(TerminalBorder.TOP_RIGHT_CORNER.getCharacter());
-        return outputString.toString();
+        return TerminalBorder.TOP_LEFT_CORNER.getCharacter() + String.valueOf(TerminalBorder.TOP_BOTTOM_CHARACTER.getCharacter()).repeat(Board.SIDE_LENGTH) +
+                TerminalBorder.TOP_RIGHT_CORNER.getCharacter();
     }
 
     private String bottomRow() {
-        StringBuilder outputString = new StringBuilder(TerminalBorder.BOTTOM_LEFT_CORNER.getCharacter());
-        outputString.append(String.valueOf(TerminalBorder.TOP_BOTTOM_CHARACTER.getCharacter()).repeat(Board.SIDE_LENGTH));
-        outputString.append(TerminalBorder.BOTTOM_RIGHT_CORNER.getCharacter());
-        return outputString.toString();
+        return TerminalBorder.BOTTOM_LEFT_CORNER.getCharacter() + String.valueOf(TerminalBorder.TOP_BOTTOM_CHARACTER.getCharacter()).repeat(Board.SIDE_LENGTH) +
+                TerminalBorder.BOTTOM_RIGHT_CORNER.getCharacter();
     }
 
     public Coordinate getUserCoordinates() {
