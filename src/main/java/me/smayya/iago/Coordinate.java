@@ -11,14 +11,6 @@ public class Coordinate implements Comparable<Coordinate> {
         this.column = column;
     }
 
-    public int getRow() {
-        return row;
-    }
-
-    public int getColumn() {
-        return column;
-    }
-
     public static int getIndexFromCoordinate(Coordinate coordinate, int rows) {
         int startOfRow = coordinate.getRow() * rows;
         return startOfRow + coordinate.getColumn();
@@ -28,6 +20,14 @@ public class Coordinate implements Comparable<Coordinate> {
         int rowNumber = index / rows;
         int columnNumber = index % rows;
         return new Coordinate(rowNumber, columnNumber);
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getColumn() {
+        return column;
     }
 
     @Override
@@ -47,44 +47,42 @@ public class Coordinate implements Comparable<Coordinate> {
     public int compareTo(Coordinate o) {
         if (row < o.getRow()) {
             return -1;
-        }
-        else if (row > o.getRow()) {
+        } else if (row > o.getRow()) {
             return 1;
-        }
-        else {
+        } else {
             return Integer.compare(column, o.getColumn());
         }
     }
 
     public boolean isUp(Coordinate coordinate) {
-        return column == coordinate.getColumn() && coordinate.getRow() < row;
-    }
-
-    public boolean isDown(Coordinate coordinate) {
         return column == coordinate.getColumn() && coordinate.getRow() > row;
     }
 
+    public boolean isDown(Coordinate coordinate) {
+        return column == coordinate.getColumn() && coordinate.getRow() < row;
+    }
+
     public boolean isLeft(Coordinate coordinate) {
-        return row == coordinate.getRow() && coordinate.getColumn() < row;
+        return row == coordinate.getRow() && coordinate.getColumn() > column;
     }
 
     public boolean isRight(Coordinate coordinate) {
-        return row == coordinate.getRow() && coordinate.getColumn() > row;
+        return row == coordinate.getRow() && coordinate.getColumn() < column;
     }
 
     public boolean isUpLeft(Coordinate coordinate) {
-        return row - coordinate.getRow() == column - coordinate.getColumn() && coordinate.getRow() < row && coordinate.getColumn() < column;
+        return Math.abs(row - coordinate.getRow()) == Math.abs(column - coordinate.getColumn()) && coordinate.getRow() > row && coordinate.getColumn() > column;
     }
 
     public boolean isUpRight(Coordinate coordinate) {
-        return row - coordinate.getRow() == column - coordinate.getColumn() && coordinate.getRow() < row && coordinate.getColumn() > column;
+        return Math.abs(row - coordinate.getRow()) == Math.abs(column - coordinate.getColumn()) && coordinate.getRow() > row && coordinate.getColumn() < column;
     }
 
     public boolean isDownLeft(Coordinate coordinate) {
-        return row - coordinate.getRow() == column - coordinate.getColumn() && coordinate.getRow() > row && coordinate.getColumn() < column;
+        return Math.abs(row - coordinate.getRow()) == Math.abs(column - coordinate.getColumn()) && coordinate.getRow() < row && coordinate.getColumn() > column;
     }
 
     public boolean isDownRight(Coordinate coordinate) {
-        return row - coordinate.getRow() == column - coordinate.getColumn() && coordinate.getRow() > row && coordinate.getColumn() > column;
+        return Math.abs(row - coordinate.getRow()) == Math.abs(column - coordinate.getColumn()) && coordinate.getRow() < row && coordinate.getColumn() < column;
     }
 }

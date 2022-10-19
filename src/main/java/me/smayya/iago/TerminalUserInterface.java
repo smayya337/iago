@@ -7,6 +7,7 @@ public class TerminalUserInterface extends UserInterface {
     public void display(Board board) {
         System.out.println(prettyPrintBoard(board));
     }
+
     public String prettyPrintBoard(Board board) {
         int sideLength = board.getSideLength();
         String outputString = topRow();
