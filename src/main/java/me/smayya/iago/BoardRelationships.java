@@ -53,7 +53,7 @@ public class BoardRelationships {
         List<Coordinate>[] relations = new List[coordinates.size()];
         for (Coordinate coordinate : coordinates) {
             int index = Coordinate.getIndexFromCoordinate(coordinate, sideLength);
-            relations[index] = coordinates.stream().filter(coordinate::isUpRight).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+            relations[index] = coordinates.stream().filter(x -> x.isUpRight(coordinate)).sorted(Comparator.reverseOrder()).collect(Collectors.toList());
         }
         return relations;
     }
