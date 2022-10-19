@@ -53,15 +53,21 @@ public class Game {
     }
 
     public Player getWinner() {
-        if (!isOver()) return null;
+        if (!isOver() || isTie()) return null;
         return Arrays.stream(Player.values()).max((x1, x2) -> board.getCount(x1) - board.getCount(x2)).orElse(null);
+    }
+
+    public boolean isTie() {
+        return isOver() && players.keySet().stream().mapToInt(board::getCount).distinct().count() == 1;
     }
 
     public void move(Coordinate coordinate, Player player) {
         if (isOver()) {
             throw new RuntimeException("Game is already over!");
         }
-        board.move(coordinate, player);
+        if (coordinate != null) {
+            board.move(coordinate, player);
+        }
         swapPlayers();
     }
 
@@ -75,10 +81,6 @@ public class Game {
     }
 
     private void swapPlayers() {
-        if (currentPlayer.equals(Player.WHITE)) {
-            currentPlayer = Player.BLACK;
-        } else {
-            currentPlayer = Player.WHITE;
-        }
+        currentPlayer = Player.getOpponent(currentPlayer);
     }
 }
