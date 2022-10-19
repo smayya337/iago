@@ -54,7 +54,16 @@ public class Game {
 
     public Player getWinner() {
         if (!isOver() || isTie()) return null;
-        return Arrays.stream(Player.values()).max((x1, x2) -> board.getCount(x1) - board.getCount(x2)).orElse(null);
+        Player winner = null;
+        int pieces = 0;
+        for (Player player:
+             Player.values()) {
+            if (board.getCount(player) > pieces) {
+                winner = player;
+                pieces = board.getCount(player);
+            }
+        }
+        return winner;
     }
 
     public boolean isTie() {
