@@ -77,4 +77,16 @@ public class BoardTest {
         assertFalse(board.isCorner(edge));
         assertTrue(board.isEdge(edge));
     }
+
+    @Test
+    public void testIllegalBoardSize() {
+        String illegalBoard = "....";
+        assertThrows(IllegalArgumentException.class, () -> new Board(illegalBoard));
+    }
+
+    @Test
+    public void testCounts() {
+        assertEquals(2, board.getCount(Player.BLACK));
+        assertEquals(2, board.getCount(Player.WHITE));
+    }
 }
