@@ -1,7 +1,7 @@
 package me.smayya.iago;
 
 public enum Player {
-    WHITE("x"), BLACK("o");
+    BLACK("x"), WHITE("o");
 
     private final String token;
 
@@ -11,5 +11,13 @@ public enum Player {
 
     String getToken() {
         return token;
+    }
+
+    static Player getOpponent(Player player) {
+        if (player.equals(Player.WHITE)) {
+            return Player.BLACK;
+        } else {
+            return Player.WHITE;
+        }
     }
 }
