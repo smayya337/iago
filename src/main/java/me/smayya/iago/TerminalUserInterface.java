@@ -14,7 +14,7 @@ public class TerminalUserInterface extends UserInterface {
             display(game.getBoard());
             Player currentPlayer = game.getCurrentPlayer();
             Strategy currentStrategy = game.getPlayerStrategy(currentPlayer);
-            if (currentStrategy != null) {
+            if (currentStrategy == null) {
                 Coordinate playerMove = getUserCoordinates();
                 game.move(playerMove, currentPlayer);
             }
