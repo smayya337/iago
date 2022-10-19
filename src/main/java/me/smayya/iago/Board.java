@@ -12,9 +12,9 @@ public class Board implements Cloneable {
     private final Map<Direction, List<Coordinate>[]> relationships;
     private String board;
 
-    private Board(String board, BoardCounts counts, Set<Coordinate> coordinates, Map<Direction, List<Coordinate>[]> relationships) {
+    private Board(String board, Set<Coordinate> coordinates, Map<Direction, List<Coordinate>[]> relationships) {
         this.board = board;
-        this.counts = counts;
+        this.counts = new BoardCounts(board);
         this.coordinates = coordinates;
         this.relationships = relationships;
     }
@@ -133,6 +133,9 @@ public class Board implements Cloneable {
 
     public void move(Coordinate coordinate, Player player) {
         Set<Coordinate> spotsToFlip = flippedSpots(coordinate, player);
+        if (spotsToFlip.isEmpty()) {
+            throw new IllegalArgumentException("This is not a valid location to move!");
+        }
         flip(coordinate, player);
         for (Coordinate spot :
                 spotsToFlip) {
@@ -159,7 +162,7 @@ public class Board implements Cloneable {
 
     @Override
     public Board clone() {
-        return new Board(board, counts, coordinates, relationships);
+        return new Board(board, coordinates, relationships);
     }
 
     @Override
