@@ -4,9 +4,11 @@ import java.util.Scanner;
 
 public class TerminalUserInterface extends UserInterface {
     private static final String PLAYER_STRATEGY_STRING = "PLAYER";
+    private Scanner sc;
 
     @Override
     public void play() {
+        sc = new Scanner(System.in);
         Strategy strategy1 = getStrategyFromCommandLine(1);
         Strategy strategy2 = getStrategyFromCommandLine(2);
         Game game = new Game(strategy1, strategy2);
@@ -22,10 +24,10 @@ public class TerminalUserInterface extends UserInterface {
                 game.move(currentPlayer);
             }
         }
+        sc.close();
     }
 
     private Strategy getStrategyFromCommandLine(int playerNumber) {
-        Scanner sc = new Scanner(System.in);
         System.out.println("Select a computer strategy for player " + playerNumber + "! Available strategies: ");
         for (AvailableStrategies strategy : AvailableStrategies.values()) {
             System.out.println("  * " + strategy.toString());
@@ -44,7 +46,6 @@ public class TerminalUserInterface extends UserInterface {
                 System.err.println("That's not a valid option!");
             }
         }
-        sc.close();
         return output;
     }
 
@@ -60,10 +61,7 @@ public class TerminalUserInterface extends UserInterface {
                 Coordinate coordinate = new Coordinate(row, column);
                 outputString.append(board.getTokenAtCoordinate(coordinate));
             }
-            outputString.append(TerminalBorder.SIDE_CHARACTER.getCharacter());
-            if (row < Board.SIDE_LENGTH - 1) {
-                outputString.append("\n");
-            }
+            outputString.append(TerminalBorder.SIDE_CHARACTER.getCharacter()).append("\n");
         }
         outputString.append(bottomRow());
         return outputString.toString();
@@ -80,7 +78,6 @@ public class TerminalUserInterface extends UserInterface {
     }
 
     public Coordinate getUserCoordinates() {
-        Scanner sc = new Scanner(System.in);
         System.out.print("Row to place tile (top row is 1): ");
         int row = sc.nextInt() - 1;
         System.out.println();
