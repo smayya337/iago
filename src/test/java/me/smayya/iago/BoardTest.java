@@ -63,4 +63,18 @@ public class BoardTest {
         }
         assertEquals(expected.size(), validLocations.size());
     }
+
+    @Test
+    public void testIsCorner() {
+        int corner = 63;
+        assertTrue(board.isCorner(corner));
+        assertFalse(board.isEdge(corner));
+    }
+
+    @Test
+    public void testIsEdge() {
+        int edge = 62;
+        assertFalse(board.isCorner(edge));
+        assertTrue(board.isEdge(edge));
+    }
 }
