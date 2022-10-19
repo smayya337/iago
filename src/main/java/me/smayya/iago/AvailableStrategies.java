@@ -12,4 +12,8 @@ public enum AvailableStrategies {
     Strategy getStrategy() {
         return strategy;
     }
+
+    static AvailableStrategies getStrategyByName(String name) {
+        return AvailableStrategies.valueOf(name.toUpperCase());
+    }
 }
