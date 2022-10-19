@@ -133,6 +133,9 @@ public class Board implements Cloneable {
 
     public void move(Coordinate coordinate, Player player) {
         Set<Coordinate> spotsToFlip = flippedSpots(coordinate, player);
+        if (spotsToFlip.isEmpty()) {
+            throw new IllegalArgumentException("This is not a valid location to move!");
+        }
         flip(coordinate, player);
         for (Coordinate spot :
                 spotsToFlip) {
