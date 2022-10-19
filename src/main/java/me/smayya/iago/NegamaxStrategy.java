@@ -15,7 +15,7 @@ public class NegamaxStrategy extends Strategy {
             newBoard.move(coordinate, player);
             scores.put(coordinate, negamax(newBoard, player, DEFAULT_DEPTH));
         }
-        return scores.keySet().stream().max(Comparator.comparingDouble(scores::get)).orElseThrow();
+        return scores.keySet().stream().max(Comparator.comparingDouble(scores::get)).orElse(null);
     }
 
     private double negamax(Board board, Player lastMoved, int depth) {
@@ -29,7 +29,7 @@ public class NegamaxStrategy extends Strategy {
             newBoard.move(coordinate, nextMove);
             scores.add(-1 * negamax(newBoard, nextMove, depth - 1));
         }
-        return scores.stream().max(Double::compare).orElseThrow();
+        return scores.stream().max(Double::compare).orElse(Double.NEGATIVE_INFINITY);
     }
 
     private double score(Board board, Player player) {
