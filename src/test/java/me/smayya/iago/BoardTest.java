@@ -89,4 +89,9 @@ public class BoardTest {
         assertEquals(2, board.getCount(Player.BLACK));
         assertEquals(2, board.getCount(Player.WHITE));
     }
+
+    @Test
+    public void testMoveIllegalLocation() {
+        assertThrows(IllegalArgumentException.class, () -> board.move(new Coordinate(0, 0), Player.BLACK));
+    }
 }
