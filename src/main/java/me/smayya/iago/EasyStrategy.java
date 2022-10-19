@@ -21,14 +21,13 @@ public class EasyStrategy extends Strategy {
     }
 
     private double score(Board board, Player player) {
-        int sideLength = board.getSideLength();
         double total = 0.0;
-        for (int i = 0; i < board.getSize(); i++) {
-            Coordinate coordinate = Coordinate.getCoordinateFromIndex(i, sideLength);
+        for (int i = 0; i < Board.SIZE; i++) {
+            Coordinate coordinate = Coordinate.getCoordinateFromIndex(i, Board.SIDE_LENGTH);
             if (board.getTokenAtCoordinate(coordinate).equals(player.getToken())) {
-                if (isCorner(board, i)) {
+                if (isCorner(i)) {
                     total += CORNER_POINTS;
-                } else if (isEdge(board, i)) {
+                } else if (isEdge(i)) {
                     total += EDGE_POINTS;
                 } else {
                     total += NORMAL_POINTS;
@@ -38,20 +37,20 @@ public class EasyStrategy extends Strategy {
         return total;
     }
 
-    private boolean isCorner(Board board, int index) {
-        Coordinate coordinate = Coordinate.getCoordinateFromIndex(index, board.getSideLength());
-        return (isOnEnd(board, coordinate.getRow()) && isOnEnd(board, coordinate.getColumn()));
+    private boolean isCorner(int index) {
+        Coordinate coordinate = Coordinate.getCoordinateFromIndex(index, Board.SIDE_LENGTH);
+        return (isOnEnd(coordinate.getRow()) && isOnEnd(coordinate.getColumn()));
     }
 
-    private boolean isEdge(Board board, int index) {
-        Coordinate coordinate = Coordinate.getCoordinateFromIndex(index, board.getSideLength());
-        boolean topOrBottom = (isOnEnd(board, coordinate.getRow()) && !isOnEnd(board, coordinate.getColumn()));
-        boolean leftOrRight = (!isOnEnd(board, coordinate.getRow()) && isOnEnd(board, coordinate.getColumn()));
+    private boolean isEdge(int index) {
+        Coordinate coordinate = Coordinate.getCoordinateFromIndex(index, Board.SIDE_LENGTH);
+        boolean topOrBottom = (isOnEnd(coordinate.getRow()) && !isOnEnd(coordinate.getColumn()));
+        boolean leftOrRight = (!isOnEnd(coordinate.getRow()) && isOnEnd(coordinate.getColumn()));
         return (topOrBottom || leftOrRight);
     }
 
-    private boolean isOnEnd(Board board, int location) {
-        int end = board.getSideLength() - 1;
+    private boolean isOnEnd(int location) {
+        int end = Board.SIDE_LENGTH - 1;
         return (location == 0 || location == end);
     }
 }
