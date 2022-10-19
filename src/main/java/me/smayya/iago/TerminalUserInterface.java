@@ -32,13 +32,14 @@ public class TerminalUserInterface extends UserInterface {
         if (game.isTie()) {
             System.out.println("The game ended in a tie.");
         } else {
-            System.out.println("The winner is player " + (game.getWinner().ordinal() + 1) + ".");
+            int winnerNumber = game.getWinner().ordinal();
+            System.out.println("The winner is player " + (winnerNumber + 1) + " (" + Player.values()[winnerNumber].getToken() + ").");
         }
         sc.close();
     }
 
     private Strategy getStrategyFromCommandLine(int playerNumber) {
-        System.out.println("Select a computer strategy for player " + playerNumber + "! Available strategies: ");
+        System.out.println("Select a computer strategy for player " + playerNumber + " (" + Player.values()[playerNumber - 1].getToken() + ")! Available strategies: ");
         for (AvailableStrategies strategy : AvailableStrategies.values()) {
             System.out.println("  * " + strategy.toString());
         }
