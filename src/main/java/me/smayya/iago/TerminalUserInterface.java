@@ -26,6 +26,8 @@ public class TerminalUserInterface extends UserInterface {
                 game.move(currentPlayer);
             }
         }
+        display(game.getBoard());
+        System.out.println();
         System.out.print("Game over! ");
         if (game.isTie()) {
             System.out.println("The game ended in a tie.");
