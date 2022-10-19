@@ -4,7 +4,12 @@ This project is an Othello player written in Java. The main goals of this projec
 
 ## Usage
 
-Clone this repository and run `./gradlew build`. This project is still a work in progress, so it'll be a bit before anything actually works.
+Clone this repository and run `./gradlew build`. You should be able to play a game of Othello on the command line.
+
+Current algorithms include:
+
+* `EASY`: this algorithm focuses purely on how many tiles (interior, edge, and corner) it controls.
+* `MEDIUM`: this algorithm implements a negamax algorithm that looks at tiles and number of possible moves for both players.
 
 ## The Name
 
