@@ -51,6 +51,7 @@ public class BoardTest {
         expected.add(new Coordinate(6, 0));
         expected.add(new Coordinate(6, 1));
         expected.add(new Coordinate(5, 2));
+        expected.add(new Coordinate(6, 2));
         expected.add(new Coordinate(6, 3));
         expected.add(new Coordinate(2, 4));
         expected.add(new Coordinate(6, 4));
