@@ -33,20 +33,20 @@ public class Board implements Cloneable {
 
     private static String createEmptyBoard() {
         ArrayList<Integer> populatedIndices = getPopulatedSpaces();
-        String board = "";
+        StringBuilder board = new StringBuilder();
         for (int i = 0; i < SIZE; i++) {
             if (populatedIndices.contains(i)) {
                 Coordinate coordinate = Coordinate.getCoordinateFromIndex(i, SIDE_LENGTH);
                 if (coordinate.getRow() == coordinate.getColumn()) {
-                    board += Player.WHITE.getToken();
+                    board.append(Player.WHITE.getToken());
                 } else {
-                    board += Player.BLACk.getToken();
+                    board.append(Player.BLACK.getToken());
                 }
             } else {
-                board += EMPTY_CHARACTER;
+                board.append(EMPTY_CHARACTER);
             }
         }
-        return board;
+        return board.toString();
     }
 
     private static ArrayList<Integer> getPopulatedSpaces() {
