@@ -17,7 +17,7 @@ public class EasyStrategy extends Strategy {
             newBoard.move(coordinate, player);
             scores.put(coordinate, score(newBoard, player));
         }
-        return scores.keySet().stream().max(Comparator.comparingDouble(scores::get)).orElseThrow();
+        return scores.keySet().stream().max(Comparator.comparingDouble(scores::get)).orElse(null);
     }
 
     private double score(Board board, Player player) {
