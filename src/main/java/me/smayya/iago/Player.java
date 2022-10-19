@@ -12,4 +12,12 @@ public enum Player {
     String getToken() {
         return token;
     }
+
+    static Player getOpponent(Player player) {
+        if (player.equals(Player.WHITE)) {
+            return Player.BLACK;
+        } else {
+            return Player.WHITE;
+        }
+    }
 }

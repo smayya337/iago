@@ -1,7 +1,8 @@
 package me.smayya.iago;
 
 public enum AvailableStrategies {
-    EASY(new EasyStrategy());
+    EASY(new EasyStrategy()),
+    MEDIUM(new NegamaxStrategy());
 
     private final Strategy strategy;
 

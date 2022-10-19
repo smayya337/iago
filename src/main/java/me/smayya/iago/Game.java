@@ -77,10 +77,6 @@ public class Game {
     }
 
     private void swapPlayers() {
-        if (currentPlayer.equals(Player.WHITE)) {
-            currentPlayer = Player.BLACK;
-        } else {
-            currentPlayer = Player.WHITE;
-        }
+        currentPlayer = Player.getOpponent(currentPlayer);
     }
 }

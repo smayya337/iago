@@ -178,4 +178,21 @@ public class Board implements Cloneable {
     public int getCount(Player player) {
         return counts.get(player.getToken());
     }
+
+    public boolean isCorner(int index) {
+        Coordinate coordinate = Coordinate.getCoordinateFromIndex(index, Board.SIDE_LENGTH);
+        return (isOnEnd(coordinate.getRow()) && isOnEnd(coordinate.getColumn()));
+    }
+
+    public boolean isEdge(int index) {
+        Coordinate coordinate = Coordinate.getCoordinateFromIndex(index, Board.SIDE_LENGTH);
+        boolean topOrBottom = (isOnEnd(coordinate.getRow()) && !isOnEnd(coordinate.getColumn()));
+        boolean leftOrRight = (!isOnEnd(coordinate.getRow()) && isOnEnd(coordinate.getColumn()));
+        return (topOrBottom || leftOrRight);
+    }
+
+    private boolean isOnEnd(int location) {
+        int end = Board.SIDE_LENGTH - 1;
+        return (location == 0 || location == end);
+    }
 }
