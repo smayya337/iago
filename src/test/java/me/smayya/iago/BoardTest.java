@@ -2,6 +2,9 @@ package me.smayya.iago;
 
 import org.junit.jupiter.api.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BoardTest {
@@ -34,5 +37,29 @@ public class BoardTest {
         board.move(coordinate, Player.BLACK);
         String expected = "...................x.......xx......xo...........................";
         assertEquals(expected, board.getBoard());
+    }
+
+    @Test
+    public void testValidLocations() {
+        String midGameBoard = "............o....ooo....oxoxx....xooo....x.x....................";
+        board = new Board(midGameBoard);
+        Set<Coordinate> validLocations = board.getValidLocations(Player.WHITE);
+        Set<Coordinate> expected = new HashSet<>();
+        expected.add(new Coordinate(2, 0));
+        expected.add(new Coordinate(4, 0));
+        expected.add(new Coordinate(5, 0));
+        expected.add(new Coordinate(6, 0));
+        expected.add(new Coordinate(6, 1));
+        expected.add(new Coordinate(5, 2));
+        expected.add(new Coordinate(6, 3));
+        expected.add(new Coordinate(2, 4));
+        expected.add(new Coordinate(6, 4));
+        expected.add(new Coordinate(2, 5));
+        expected.add(new Coordinate(3, 5));
+        expected.add(new Coordinate(4, 5));
+        for (Coordinate location : validLocations) {
+            assertTrue(expected.contains(location));
+        }
+        assertEquals(expected.size(), validLocations.size());
     }
 }
