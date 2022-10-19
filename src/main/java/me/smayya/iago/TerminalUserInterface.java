@@ -9,39 +9,30 @@ public class TerminalUserInterface extends UserInterface {
     }
 
     public String prettyPrintBoard(Board board) {
-        int sideLength = board.getSideLength();
-        String outputString = topRow(sideLength);
-        for (int row = 0; row < sideLength; row++) {
-            outputString += TerminalBorder.SIDE_CHARACTER.getCharacter();
-            for (int column = 0; column < sideLength; column++) {
+        StringBuilder outputString = new StringBuilder(topRow());
+        for (int row = 0; row < Board.SIDE_LENGTH; row++) {
+            outputString.append(TerminalBorder.SIDE_CHARACTER.getCharacter());
+            for (int column = 0; column < Board.SIDE_LENGTH; column++) {
                 Coordinate coordinate = new Coordinate(row, column);
-                outputString += board.getTokenAtCoordinate(coordinate);
+                outputString.append(board.getTokenAtCoordinate(coordinate));
             }
-            outputString += TerminalBorder.SIDE_CHARACTER.getCharacter();
-            if (row < sideLength - 1) {
-                outputString += "\n";
+            outputString.append(TerminalBorder.SIDE_CHARACTER.getCharacter());
+            if (row < Board.SIDE_LENGTH - 1) {
+                outputString.append("\n");
             }
         }
-        outputString += bottomRow(sideLength);
-        return outputString;
+        outputString.append(bottomRow());
+        return outputString.toString();
     }
 
-    private String topRow(int sideLength) {
-        String outputString = TerminalBorder.TOP_LEFT_CORNER.getCharacter();
-        for (int i = 0; i < sideLength; i++) {
-            outputString += TerminalBorder.TOP_BOTTOM_CHARACTER.getCharacter();
-        }
-        outputString += TerminalBorder.TOP_RIGHT_CORNER.getCharacter();
-        return outputString;
+    private String topRow() {
+        return TerminalBorder.TOP_LEFT_CORNER.getCharacter() + String.valueOf(TerminalBorder.TOP_BOTTOM_CHARACTER.getCharacter()).repeat(Board.SIDE_LENGTH) +
+                TerminalBorder.TOP_RIGHT_CORNER.getCharacter();
     }
 
-    private String bottomRow(int sideLength) {
-        String outputString = TerminalBorder.BOTTOM_LEFT_CORNER.getCharacter();
-        for (int i = 0; i < sideLength; i++) {
-            outputString += TerminalBorder.TOP_BOTTOM_CHARACTER.getCharacter();
-        }
-        outputString += TerminalBorder.BOTTOM_RIGHT_CORNER.getCharacter();
-        return outputString;
+    private String bottomRow() {
+        return TerminalBorder.BOTTOM_LEFT_CORNER.getCharacter() + String.valueOf(TerminalBorder.TOP_BOTTOM_CHARACTER.getCharacter()).repeat(Board.SIDE_LENGTH) +
+                TerminalBorder.BOTTOM_RIGHT_CORNER.getCharacter();
     }
 
     public Coordinate getUserCoordinates() {
@@ -56,7 +47,12 @@ public class TerminalUserInterface extends UserInterface {
     }
 
     enum TerminalBorder {
-        TOP_LEFT_CORNER("┌"), TOP_RIGHT_CORNER("┐"), BOTTOM_LEFT_CORNER("└"), BOTTOM_RIGHT_CORNER("┘"), TOP_BOTTOM_CHARACTER("─"), SIDE_CHARACTER("│");
+        TOP_LEFT_CORNER ("┌"),
+        TOP_RIGHT_CORNER ("┐"),
+        BOTTOM_LEFT_CORNER ("└"),
+        BOTTOM_RIGHT_CORNER ("┘"),
+        TOP_BOTTOM_CHARACTER ("─"),
+        SIDE_CHARACTER ("│");
 
         private final String character;
 
