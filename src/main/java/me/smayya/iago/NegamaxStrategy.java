@@ -29,7 +29,7 @@ public class NegamaxStrategy extends Strategy {
             newBoard.move(coordinate, nextMove);
             scores.add(-1 * negamax(newBoard, nextMove, depth - 1));
         }
-        return scores.stream().max(Double::compare).orElseThrow();
+        return scores.stream().max(Double::compare).orElse(Double.NEGATIVE_INFINITY);
     }
 
     private double score(Board board, Player player) {
