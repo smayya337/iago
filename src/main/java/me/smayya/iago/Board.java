@@ -33,20 +33,20 @@ public class Board implements Cloneable {
 
     private static String createEmptyBoard() {
         ArrayList<Integer> populatedIndices = getPopulatedSpaces();
-        String board = "";
+        StringBuilder board = new StringBuilder();
         for (int i = 0; i < SIZE; i++) {
             if (populatedIndices.contains(i)) {
                 Coordinate coordinate = Coordinate.getCoordinateFromIndex(i, SIDE_LENGTH);
                 if (coordinate.getRow() == coordinate.getColumn()) {
-                    board += Player.WHITE.getToken();
+                    board.append(Player.WHITE.getToken());
                 } else {
-                    board += Player.BLACk.getToken();
+                    board.append(Player.BLACK.getToken());
                 }
             } else {
-                board += EMPTY_CHARACTER;
+                board.append(EMPTY_CHARACTER);
             }
         }
-        return board;
+        return board.toString();
     }
 
     private static ArrayList<Integer> getPopulatedSpaces() {
@@ -177,5 +177,22 @@ public class Board implements Cloneable {
 
     public int getCount(Player player) {
         return counts.get(player.getToken());
+    }
+
+    public boolean isCorner(int index) {
+        Coordinate coordinate = Coordinate.getCoordinateFromIndex(index, Board.SIDE_LENGTH);
+        return (isOnEnd(coordinate.getRow()) && isOnEnd(coordinate.getColumn()));
+    }
+
+    public boolean isEdge(int index) {
+        Coordinate coordinate = Coordinate.getCoordinateFromIndex(index, Board.SIDE_LENGTH);
+        boolean topOrBottom = (isOnEnd(coordinate.getRow()) && !isOnEnd(coordinate.getColumn()));
+        boolean leftOrRight = (!isOnEnd(coordinate.getRow()) && isOnEnd(coordinate.getColumn()));
+        return (topOrBottom || leftOrRight);
+    }
+
+    private boolean isOnEnd(int location) {
+        int end = Board.SIDE_LENGTH - 1;
+        return (location == 0 || location == end);
     }
 }

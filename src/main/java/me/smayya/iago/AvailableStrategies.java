@@ -1,7 +1,8 @@
 package me.smayya.iago;
 
 public enum AvailableStrategies {
-    EASY(new EasyStrategy());
+    EASY(new EasyStrategy()),
+    MEDIUM(new NegamaxStrategy());
 
     private final Strategy strategy;
 
@@ -11,5 +12,9 @@ public enum AvailableStrategies {
 
     Strategy getStrategy() {
         return strategy;
+    }
+
+    static AvailableStrategies getStrategyByName(String name) {
+        return AvailableStrategies.valueOf(name.toUpperCase());
     }
 }
