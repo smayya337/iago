@@ -27,21 +27,17 @@ public class TerminalUserInterface extends UserInterface {
     }
 
     private String topRow() {
-        String outputString = TerminalBorder.TOP_LEFT_CORNER.getCharacter();
-        for(int i = 0; i < Board.SIDE_LENGTH; i++) {
-            outputString += TerminalBorder.TOP_BOTTOM_CHARACTER.getCharacter();
-        }
-        outputString += TerminalBorder.TOP_RIGHT_CORNER.getCharacter();
-        return outputString;
+        StringBuilder outputString = new StringBuilder(TerminalBorder.TOP_LEFT_CORNER.getCharacter());
+        outputString.append(String.valueOf(TerminalBorder.TOP_BOTTOM_CHARACTER.getCharacter()).repeat(Board.SIDE_LENGTH));
+        outputString.append(TerminalBorder.TOP_RIGHT_CORNER.getCharacter());
+        return outputString.toString();
     }
 
     private String bottomRow() {
-        String outputString = TerminalBorder.BOTTOM_LEFT_CORNER.getCharacter();
-        for(int i = 0; i < Board.SIDE_LENGTH; i++) {
-            outputString += TerminalBorder.TOP_BOTTOM_CHARACTER.getCharacter();
-        }
-        outputString += TerminalBorder.BOTTOM_RIGHT_CORNER.getCharacter();
-        return outputString;
+        StringBuilder outputString = new StringBuilder(TerminalBorder.BOTTOM_LEFT_CORNER.getCharacter());
+        outputString.append(String.valueOf(TerminalBorder.TOP_BOTTOM_CHARACTER.getCharacter()).repeat(Board.SIDE_LENGTH));
+        outputString.append(TerminalBorder.BOTTOM_RIGHT_CORNER.getCharacter());
+        return outputString.toString();
     }
 
     public Coordinate getUserCoordinates() {
