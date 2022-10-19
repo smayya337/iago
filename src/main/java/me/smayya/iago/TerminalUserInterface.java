@@ -9,7 +9,7 @@ public class TerminalUserInterface extends UserInterface {
     }
     public String prettyPrintBoard(Board board) {
         int sideLength = board.getSideLength();
-        String outputString = topRow(sideLength);
+        String outputString = topRow();
         for (int row = 0; row < sideLength; row++) {
             outputString += TerminalBorder.SIDE_CHARACTER.getCharacter();
             for (int column = 0; column < sideLength; column++) {
@@ -21,22 +21,22 @@ public class TerminalUserInterface extends UserInterface {
                 outputString += "\n";
             }
         }
-        outputString += bottomRow(sideLength);
+        outputString += bottomRow();
         return outputString;
     }
 
-    private String topRow(int sideLength) {
+    private String topRow() {
         String outputString = TerminalBorder.TOP_LEFT_CORNER.getCharacter();
-        for(int i = 0; i < sideLength; i++) {
+        for(int i = 0; i < Board.SIDE_LENGTH; i++) {
             outputString += TerminalBorder.TOP_BOTTOM_CHARACTER.getCharacter();
         }
         outputString += TerminalBorder.TOP_RIGHT_CORNER.getCharacter();
         return outputString;
     }
 
-    private String bottomRow(int sideLength) {
+    private String bottomRow() {
         String outputString = TerminalBorder.BOTTOM_LEFT_CORNER.getCharacter();
-        for(int i = 0; i < sideLength; i++) {
+        for(int i = 0; i < Board.SIDE_LENGTH; i++) {
             outputString += TerminalBorder.TOP_BOTTOM_CHARACTER.getCharacter();
         }
         outputString += TerminalBorder.BOTTOM_RIGHT_CORNER.getCharacter();
