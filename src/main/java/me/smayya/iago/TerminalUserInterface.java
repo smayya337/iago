@@ -12,8 +12,10 @@ public class TerminalUserInterface extends UserInterface {
         Strategy strategy1 = getStrategyFromCommandLine(1);
         Strategy strategy2 = getStrategyFromCommandLine(2);
         Game game = new Game(strategy1, strategy2);
+        System.out.println();
         while (!game.isOver()) {
             display(game.getBoard());
+            System.out.println();
             Player currentPlayer = game.getCurrentPlayer();
             Strategy currentStrategy = game.getPlayerStrategy(currentPlayer);
             if (currentStrategy == null) {
@@ -23,6 +25,12 @@ public class TerminalUserInterface extends UserInterface {
             else {
                 game.move(currentPlayer);
             }
+        }
+        System.out.print("Game over! ");
+        if (game.isTie()) {
+            System.out.println("The game ended in a tie.");
+        } else {
+            System.out.println("The winner is player " + (game.getWinner().ordinal() + 1) + ".");
         }
         sc.close();
     }
@@ -80,7 +88,6 @@ public class TerminalUserInterface extends UserInterface {
     public Coordinate getUserCoordinates() {
         System.out.print("Row to place tile (top row is 1): ");
         int row = sc.nextInt() - 1;
-        System.out.println();
         System.out.print("Column to place tile (left-most column is 1): ");
         int column = sc.nextInt() - 1;
         System.out.println();
