@@ -61,7 +61,9 @@ public class Game {
         if (isOver()) {
             throw new RuntimeException("Game is already over!");
         }
-        board.move(coordinate, player);
+        if (coordinate != null) {
+            board.move(coordinate, player);
+        }
         swapPlayers();
     }
 
