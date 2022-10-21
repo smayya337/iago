@@ -9,7 +9,8 @@ Clone this repository and run `./gradlew build`. You should be able to play a ga
 Current algorithms include:
 
 * `EASY`: this algorithm focuses purely on how many tiles (interior, edge, and corner) it controls.
-* `MEDIUM`: this algorithm implements a negamax algorithm that looks at tiles and number of possible moves for both players.
+* `MEDIUM`: this algorithm implements a negamax algorithm with alpha-beta pruning that looks at tiles and number of possible moves for both players.
+* `HARD`: this algorithm is essentially the same as `MEDIUM`, but employs multithreading to run several simultaneous instances of the negamax algorithm with varying depths, allowing it to look farther into the future than `MEDIUM`.
 
 ## The Name
 
