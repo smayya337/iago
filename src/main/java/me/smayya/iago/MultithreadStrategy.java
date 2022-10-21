@@ -13,7 +13,7 @@ public class MultithreadStrategy extends Strategy {
     public Coordinate getMove(Board board, Player player) {
         int runningThreads = 0;
         for (Thread t : Thread.getAllStackTraces().keySet()) {
-            if (t.getState()==Thread.State.RUNNABLE) runningThreads++;
+            if (t.getState() == Thread.State.RUNNABLE) runningThreads++;
         }
         threads = Math.max(1, Runtime.getRuntime().availableProcessors() - runningThreads);
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(threads);
@@ -42,7 +42,9 @@ public class MultithreadStrategy extends Strategy {
         }
         clearPool();
         executor.shutdown();
-        return results.get(results.size() - 1).getResult();
+        NegamaxWorkerStrategy finalOutcome = results.get(results.size() - 1);
+        // System.err.println("" + finalOutcome.depth + " " + finalOutcome.getScore());
+        return finalOutcome.getResult();
     }
 
     private boolean poolIsFull() {
@@ -63,6 +65,8 @@ public class MultithreadStrategy extends Strategy {
         private final int depth;
         private Coordinate result = null;
         private boolean completed = false;
+        private Double score;
+
         public NegamaxWorkerStrategy(Board board, Player player, int depth) {
             this.board = board;
             this.player = player;
@@ -78,6 +82,11 @@ public class MultithreadStrategy extends Strategy {
             }
             result = scores.keySet().stream().max(Comparator.comparingDouble(scores::get)).orElse(null);
             completed = true;
+            if (result == null) {
+                score = Double.NaN;
+            } else {
+                score = scores.get(result);
+            }
         }
 
         private double negamax(Board board, Player lastMoved, int depth, double alpha, double beta) {
@@ -143,6 +152,10 @@ public class MultithreadStrategy extends Strategy {
 
         public boolean isCompleted() {
             return completed;
+        }
+
+        public Double getScore() {
+            return score;
         }
     }
 }
