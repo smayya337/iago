@@ -5,7 +5,7 @@ import java.util.concurrent.*;
 
 public class MultithreadStrategy extends Strategy {
     private static final long TIMEOUT_MS = 1000;
-    private static int threads = 0;
+    private int threads = 0;
     private ArrayList<NegamaxWorkerStrategy> results;
     private ArrayList<NegamaxWorkerStrategy> jobs;
 
