@@ -8,7 +8,7 @@ public class AvailableStrategiesTest {
 
     @Test
     public void testGetStrategyByName() {
-        assertInstanceOf(AvailableStrategies.class, AvailableStrategies.getStrategyByName("EASY"));
+        assertInstanceOf(AvailableStrategies.class, AvailableStrategies.getStrategyByName("BASIC"));
     }
 
     @Test
