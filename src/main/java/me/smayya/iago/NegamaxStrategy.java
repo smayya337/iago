@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Map;
 
 public class NegamaxStrategy extends Strategy {
-    private static final int DEFAULT_DEPTH = 3;
+    private static final int DEFAULT_DEPTH = 5;
     @Override
     public Coordinate getMove(Board board, Player player) {
         Map<Coordinate, Double> scores = new HashMap<>();
