@@ -3,23 +3,76 @@ package me.smayya.iago;
 import java.util.Scanner;
 
 public class TerminalUserInterface extends UserInterface {
+    private static final String PLAYER_STRATEGY_STRING = "PLAYER";
+    private Scanner sc;
+
+    @Override
+    public void play() {
+        sc = new Scanner(System.in);
+        Strategy strategy1 = getStrategyFromCommandLine(1);
+        Strategy strategy2 = getStrategyFromCommandLine(2);
+        Game game = new Game(strategy1, strategy2);
+        System.out.println();
+        while (!game.isOver()) {
+            display(game.getBoard());
+            System.out.println();
+            Player currentPlayer = game.getCurrentPlayer();
+            Strategy currentStrategy = game.getPlayerStrategy(currentPlayer);
+            if (currentStrategy == null) {
+                Coordinate playerMove = getUserCoordinates();
+                game.move(playerMove, currentPlayer);
+            }
+            else {
+                game.move(currentPlayer);
+            }
+        }
+        display(game.getBoard());
+        System.out.println();
+        System.out.print("Game over! ");
+        if (game.isTie()) {
+            System.out.println("The game ended in a tie.");
+        } else {
+            int winnerNumber = game.getWinner().ordinal();
+            System.out.println("The winner is player " + (winnerNumber + 1) + " (" + Player.values()[winnerNumber].getToken() + ").");
+        }
+        sc.close();
+    }
+
+    private Strategy getStrategyFromCommandLine(int playerNumber) {
+        System.out.println("Select a computer strategy for player " + playerNumber + " (" + Player.values()[playerNumber - 1].getToken() + ")! Available strategies: ");
+        for (AvailableStrategies strategy : AvailableStrategies.values()) {
+            System.out.println("  * " + strategy.toString());
+        }
+        System.out.println("Type PLAYER to control this player yourself.");
+        Strategy output = null;
+        while (output == null) {
+            try {
+                System.out.print("Player " + playerNumber + ": ");
+                String strat = sc.next();
+                if (strat.equalsIgnoreCase(PLAYER_STRATEGY_STRING)) {
+                    return null;
+                }
+                output = AvailableStrategies.getStrategyByName(strat).getStrategy();
+            } catch (IllegalArgumentException e) {
+                System.err.println("That's not a valid option!");
+            }
+        }
+        return output;
+    }
 
     public void display(Board board) {
         System.out.println(prettyPrintBoard(board));
     }
 
     public String prettyPrintBoard(Board board) {
-        StringBuilder outputString = new StringBuilder(topRow());
+        StringBuilder outputString = new StringBuilder(topRow() + "\n");
         for (int row = 0; row < Board.SIDE_LENGTH; row++) {
             outputString.append(TerminalBorder.SIDE_CHARACTER.getCharacter());
             for (int column = 0; column < Board.SIDE_LENGTH; column++) {
                 Coordinate coordinate = new Coordinate(row, column);
                 outputString.append(board.getTokenAtCoordinate(coordinate));
             }
-            outputString.append(TerminalBorder.SIDE_CHARACTER.getCharacter());
-            if (row < Board.SIDE_LENGTH - 1) {
-                outputString.append("\n");
-            }
+            outputString.append(TerminalBorder.SIDE_CHARACTER.getCharacter()).append("\n");
         }
         outputString.append(bottomRow());
         return outputString.toString();
@@ -36,10 +89,8 @@ public class TerminalUserInterface extends UserInterface {
     }
 
     public Coordinate getUserCoordinates() {
-        Scanner sc = new Scanner(System.in);
         System.out.print("Row to place tile (top row is 1): ");
         int row = sc.nextInt() - 1;
-        System.out.println();
         System.out.print("Column to place tile (left-most column is 1): ");
         int column = sc.nextInt() - 1;
         System.out.println();

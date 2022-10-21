@@ -53,15 +53,30 @@ public class Game {
     }
 
     public Player getWinner() {
-        if (!isOver()) return null;
-        return Arrays.stream(Player.values()).max((x1, x2) -> board.getCount(x1) - board.getCount(x2)).orElse(null);
+        if (!isOver() || isTie()) return null;
+        Player winner = null;
+        int pieces = 0;
+        for (Player player:
+             Player.values()) {
+            if (board.getCount(player) > pieces) {
+                winner = player;
+                pieces = board.getCount(player);
+            }
+        }
+        return winner;
+    }
+
+    public boolean isTie() {
+        return isOver() && players.keySet().stream().mapToInt(board::getCount).distinct().count() == 1;
     }
 
     public void move(Coordinate coordinate, Player player) {
         if (isOver()) {
             throw new RuntimeException("Game is already over!");
         }
-        board.move(coordinate, player);
+        if (coordinate != null) {
+            board.move(coordinate, player);
+        }
         swapPlayers();
     }
 
