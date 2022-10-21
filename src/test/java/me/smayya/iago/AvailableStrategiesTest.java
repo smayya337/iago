@@ -2,8 +2,6 @@ package me.smayya.iago;
 
 import org.junit.jupiter.api.*;
 
-import java.util.NoSuchElementException;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AvailableStrategiesTest {
@@ -20,6 +18,6 @@ public class AvailableStrategiesTest {
 
     @Test
     public void testGetStrategy() {
-        assertInstanceOf(EasyStrategy.class, AvailableStrategies.EASY.getStrategy());
+        assertInstanceOf(EasyStrategy.class, AvailableStrategies.BASIC.getStrategy());
     }
 }
