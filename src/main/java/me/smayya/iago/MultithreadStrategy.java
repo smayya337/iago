@@ -22,7 +22,7 @@ public class MultithreadStrategy extends Strategy {
         long startTime = System.currentTimeMillis();
         long endTime = startTime + TIMEOUT_MS;
         int currentDepth = 1;
-        while (System.currentTimeMillis() < endTime) {
+        while (System.currentTimeMillis() < endTime || results.isEmpty()) {
             if (board.countAllPlayers() + currentDepth > Board.SIZE) {
                 break;
             }
@@ -30,30 +30,27 @@ public class MultithreadStrategy extends Strategy {
                 continue;
             }
             clearPool();
-            NegamaxWorkerStrategy worker = new NegamaxWorkerStrategy(board, player, currentDepth);
-            Future<?> future = executor.submit(worker);
-            Runnable cancelTask = () -> future.cancel(true);
             long diff = endTime - System.currentTimeMillis();
-            executor.schedule(cancelTask, diff, TimeUnit.MILLISECONDS);
-            jobs.add(worker);
-            currentDepth++;
+            if (diff > 0) {
+                NegamaxWorkerStrategy worker = new NegamaxWorkerStrategy(board, player, currentDepth);
+                Future<?> future = executor.submit(worker);
+                Runnable cancelTask = () -> future.cancel(true);
+                executor.schedule(cancelTask, diff, TimeUnit.MILLISECONDS);
+                jobs.add(worker);
+                currentDepth++;
+            }
         }
         clearPool();
         executor.shutdown();
-        if (results.size() == 0) {
-            return null;
-        }
-        else {
-            return results.get(results.size() - 1).getResult();
-        }
+        return results.get(results.size() - 1).getResult();
     }
 
     private boolean poolIsFull() {
-        return jobs.size() == threads && jobs.get(0).getResult() == null;
+        return jobs.size() == threads && !jobs.get(0).isCompleted();
     }
 
     private void clearPool() {
-        while (jobs.size() > 0 && jobs.get(0).getResult() != null) {
+        while (jobs.size() > 0 && jobs.get(0).isCompleted()) {
             results.add(jobs.remove(0));
         }
     }
@@ -64,12 +61,12 @@ public class MultithreadStrategy extends Strategy {
         private final Board board;
         private final Player player;
         private final int depth;
-        private Coordinate result;
+        private Coordinate result = null;
+        private boolean completed = false;
         public NegamaxWorkerStrategy(Board board, Player player, int depth) {
             this.board = board;
             this.player = player;
             this.depth = depth;
-            this.result = null;
         }
 
         public void run() {
@@ -80,6 +77,7 @@ public class MultithreadStrategy extends Strategy {
                 scores.put(coordinate, negamax(newBoard, player, depth, DEFAULT_ALPHA, DEFAULT_BETA));
             }
             result = scores.keySet().stream().max(Comparator.comparingDouble(scores::get)).orElse(null);
+            completed = true;
         }
 
         private double negamax(Board board, Player lastMoved, int depth, double alpha, double beta) {
@@ -141,6 +139,10 @@ public class MultithreadStrategy extends Strategy {
 
         public Coordinate getResult() {
             return result;
+        }
+
+        public boolean isCompleted() {
+            return completed;
         }
     }
 }
