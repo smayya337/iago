@@ -22,7 +22,7 @@ public class NegamaxStrategy extends Strategy {
     }
 
     private double negamax(Board board, Player lastMoved, int depth, double alpha, double beta) {
-        if (depth == 0) {
+        if (depth == 0 || board.countAllPlayers() + depth >= Board.SIZE) {
             return score(board, lastMoved);
         }
         double value = DEFAULT_ALPHA;
@@ -43,9 +43,6 @@ public class NegamaxStrategy extends Strategy {
     }
 
     private double score(Board board, Player player) {
-        final double CORNER_POINTS = 4;
-        final double EDGE_POINTS = 2;
-        final double NORMAL_POINTS = 1;
         final double SPOT_MULTIPLIER = 8;
         final double MOBILITY_MULTIPLIER = 16;
         double total = 0.0;
@@ -54,26 +51,30 @@ public class NegamaxStrategy extends Strategy {
             Coordinate coordinate = Coordinate.getCoordinateFromIndex(i, Board.SIDE_LENGTH);
             String token = board.getTokenAtCoordinate(coordinate);
             if (token.equals(player.getToken())) {
-                if (board.isCorner(i)) {
-                    total += CORNER_POINTS;
-                } else if (board.isEdge(i)) {
-                    total += EDGE_POINTS;
-                } else {
-                    total += NORMAL_POINTS;
-                }
-            }
-            else if (token.equals(opponent.getToken())) {
-                if (board.isCorner(i)) {
-                    total -= CORNER_POINTS;
-                } else if (board.isEdge(i)) {
-                    total -= EDGE_POINTS;
-                } else {
-                    total -= NORMAL_POINTS;
-                }
+                total += tokenScore(board, i);
+            } else if (token.equals(opponent.getToken())) {
+                total -= tokenScore(board, i);
             }
         }
         total *= SPOT_MULTIPLIER;
-        total += MOBILITY_MULTIPLIER * (board.getValidLocations(player).size() - board.getValidLocations(opponent).size());
+        total += MOBILITY_MULTIPLIER * mobilityScore(board, player, opponent);
         return total;
+    }
+
+    private double tokenScore(Board board, int index) {
+        final double CORNER_POINTS = 4;
+        final double EDGE_POINTS = 2;
+        final double NORMAL_POINTS = 1;
+        if (board.isCorner(index)) {
+            return CORNER_POINTS;
+        } else if (board.isEdge(index)) {
+            return EDGE_POINTS;
+        } else {
+            return NORMAL_POINTS;
+        }
+    }
+
+    private double mobilityScore(Board board, Player player, Player opponent) {
+        return board.getValidLocations(player).size() - board.getValidLocations(opponent).size();
     }
 }
