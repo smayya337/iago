@@ -102,7 +102,7 @@ public class MultithreadStrategy extends Strategy {
         }
 
         private double score(Board board, Player player) {
-            final double SPOT_MULTIPLIER = 8;
+            final double SPOT_MULTIPLIER = 16;
             final double MOBILITY_MULTIPLIER = 16;
             double total = 0.0;
             Player opponent = Player.getOpponent(player);
@@ -121,8 +121,8 @@ public class MultithreadStrategy extends Strategy {
         }
 
         private double tokenScore(Board board, int index) {
-            final double CORNER_POINTS = 4;
-            final double EDGE_POINTS = 2;
+            final double CORNER_POINTS = 16;
+            final double EDGE_POINTS = 4;
             final double NORMAL_POINTS = 1;
             if (board.isCorner(index)) {
                 return CORNER_POINTS;
