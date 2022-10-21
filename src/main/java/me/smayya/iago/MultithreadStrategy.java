@@ -5,13 +5,18 @@ import java.util.concurrent.*;
 
 public class MultithreadStrategy extends Strategy {
     private static final long TIMEOUT_MS = 1000;
-    private static final int cores = Runtime.getRuntime().availableProcessors();
+    private static int threads = 0;
     private ArrayList<NegamaxWorkerStrategy> results;
     private ArrayList<NegamaxWorkerStrategy> jobs;
 
     @Override
     public Coordinate getMove(Board board, Player player) {
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(cores);
+        int runningThreads = 0;
+        for (Thread t : Thread.getAllStackTraces().keySet()) {
+            if (t.getState()==Thread.State.RUNNABLE) runningThreads++;
+        }
+        threads = Math.max(1, Runtime.getRuntime().availableProcessors() - runningThreads);
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(threads);
         results = new ArrayList<>();
         jobs = new ArrayList<>();
         long startTime = System.currentTimeMillis();
@@ -40,7 +45,7 @@ public class MultithreadStrategy extends Strategy {
     }
 
     private boolean poolIsFull() {
-        return jobs.size() == cores && jobs.get(0).getResult() == null;
+        return jobs.size() == threads && jobs.get(0).getResult() == null;
     }
 
     private void clearPool() {
