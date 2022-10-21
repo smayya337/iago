@@ -23,6 +23,9 @@ public class MultithreadStrategy extends Strategy {
         long endTime = startTime + TIMEOUT_MS;
         int currentDepth = 1;
         while (System.currentTimeMillis() < endTime) {
+            if (board.countAllPlayers() + currentDepth > Board.SIZE) {
+                break;
+            }
             if (poolIsFull()) {
                 continue;
             }
@@ -35,6 +38,7 @@ public class MultithreadStrategy extends Strategy {
             jobs.add(worker);
             currentDepth++;
         }
+        clearPool();
         executor.shutdown();
         if (results.size() == 0) {
             return null;
