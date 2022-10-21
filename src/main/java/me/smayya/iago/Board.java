@@ -182,6 +182,10 @@ public class Board implements Cloneable {
         return counts.get(player.getToken());
     }
 
+    public int countAllPlayers() {
+        return counts.total();
+    }
+
     public boolean isCorner(int index) {
         Coordinate coordinate = Coordinate.getCoordinateFromIndex(index, Board.SIDE_LENGTH);
         return (isOnEnd(coordinate.getRow()) && isOnEnd(coordinate.getColumn()));

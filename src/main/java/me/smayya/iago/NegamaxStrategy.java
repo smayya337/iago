@@ -22,7 +22,7 @@ public class NegamaxStrategy extends Strategy {
     }
 
     private double negamax(Board board, Player lastMoved, int depth, double alpha, double beta) {
-        if (depth == 0) {
+        if (depth == 0 || board.countAllPlayers() + depth >= Board.SIZE) {
             return score(board, lastMoved);
         }
         double value = DEFAULT_ALPHA;

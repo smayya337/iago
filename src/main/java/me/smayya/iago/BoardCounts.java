@@ -20,4 +20,12 @@ public class BoardCounts {
     public int get(String token) {
         return counts.getOrDefault(token, 0);
     }
+
+    public int total() {
+        int total = 0;
+        for (Player player : Player.values()) {
+            total += get(player.getToken());
+        }
+        return total;
+    }
 }
