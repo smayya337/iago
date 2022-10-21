@@ -2,7 +2,8 @@ package me.smayya.iago;
 
 public enum AvailableStrategies {
     EASY(new EasyStrategy()),
-    MEDIUM(new NegamaxStrategy());
+    MEDIUM(new NegamaxStrategy()),
+    HARD(new MultithreadStrategy());
 
     private final Strategy strategy;
 
