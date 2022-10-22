@@ -22,28 +22,14 @@ public class NegamaxStrategy extends Strategy {
     }
 
     private double negamax(Board board, Player lastMoved, int depth, double alpha, double beta) {
-        final double WIN_SCORE = Double.POSITIVE_INFINITY;
-        boolean gameOver = true;
-        for (Player player : Player.values()) {
-            if (board.getCount(player) > 0) {
-                gameOver = false;
-                break;
-            }
-        }
+        boolean gameOver = board.gameOver();
         Player nextMove = Player.getOpponent(lastMoved);
         if (depth == 0) {
             return score(board, lastMoved);
         }
         else if (gameOver) {
-            int lastMovedCount = board.getCount(lastMoved);
-            int nextMoveCount = board.getCount(nextMove);
-            if (lastMovedCount > nextMoveCount) {
-                return WIN_SCORE;
-            }
-            else if (nextMoveCount > lastMovedCount) {
-                return -1 * WIN_SCORE;
-            }
-            else {
+            double score = Strategy.gameOverScore(board, lastMoved, nextMove);
+            if (score == 0) {
                 return score(board, lastMoved);
             }
         }
@@ -53,12 +39,12 @@ public class NegamaxStrategy extends Strategy {
             Board newBoard = board.clone();
             newBoard.move(coordinate, nextMove);
             double outcome = -1 * negamax(newBoard, nextMove, depth - 1, -1 * beta, -1 * alpha);
+            scores.add(outcome);
             value = Math.max(value, outcome);
             if (value >= beta) {
                 break;
             }
             alpha = Math.max(alpha, value);
-            scores.add(outcome);
         }
         return scores.stream().max(Double::compare).orElse(Double.NEGATIVE_INFINITY);
     }

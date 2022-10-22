@@ -202,4 +202,24 @@ public class Board implements Cloneable {
         int end = Board.SIDE_LENGTH - 1;
         return (location == 0 || location == end);
     }
+
+    public boolean gameOver() {
+        for (Player player : Player.values()) {
+            if (!getValidLocations(player).isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public Player getWinner() {
+        if (!gameOver()) return null;
+        for (Player player:
+                Player.values()) {
+            if (getCount(player) * 2 > countAllPlayers()) {
+                return player;
+            }
+        }
+        return null;
+    }
 }

@@ -1,6 +1,5 @@
 package me.smayya.iago;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,31 +42,15 @@ public class Game {
     }
 
     public boolean isOver() {
-        for (Player player : Player.values()) {
-            int playerMoves = board.getValidLocations(player).size();
-            if (playerMoves > 0) {
-                return false;
-            }
-        }
-        return true;
+        return board.gameOver();
     }
 
     public Player getWinner() {
-        if (!isOver() || isTie()) return null;
-        Player winner = null;
-        int pieces = 0;
-        for (Player player:
-             Player.values()) {
-            if (board.getCount(player) > pieces) {
-                winner = player;
-                pieces = board.getCount(player);
-            }
-        }
-        return winner;
+        return board.getWinner();
     }
 
     public boolean isTie() {
-        return isOver() && players.keySet().stream().mapToInt(board::getCount).distinct().count() == 1;
+        return isOver() && getWinner() == null;
     }
 
     public void move(Coordinate coordinate, Player player) {

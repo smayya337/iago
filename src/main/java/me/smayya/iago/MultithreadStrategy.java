@@ -23,27 +23,28 @@ public class MultithreadStrategy extends Strategy {
         long endTime = startTime + TIMEOUT_MS;
         int currentDepth = 1;
         while (System.currentTimeMillis() < endTime || results.isEmpty()) {
+            clearPool();
             if (board.countAllPlayers() + currentDepth > Board.SIZE) {
-                break;
+                continue;
             }
             if (poolIsFull()) {
                 continue;
             }
-            clearPool();
             long diff = endTime - System.currentTimeMillis();
             if (diff > 0) {
                 NegamaxWorkerStrategy worker = new NegamaxWorkerStrategy(board, player, currentDepth);
                 Future<?> future = executor.submit(worker);
-                Runnable cancelTask = () -> future.cancel(true);
-                executor.schedule(cancelTask, diff, TimeUnit.MILLISECONDS);
+                if (currentDepth > 1) {
+                    Runnable cancelTask = () -> future.cancel(true);
+                    executor.schedule(cancelTask, diff, TimeUnit.MILLISECONDS);
+                }
                 jobs.add(worker);
                 currentDepth++;
             }
         }
-        clearPool();
         executor.shutdown();
+        clearPool();
         NegamaxWorkerStrategy finalOutcome = results.get(results.size() - 1);
-        // System.err.println("" + finalOutcome.depth + " " + finalOutcome.getScore());
         return finalOutcome.getResult();
     }
 
@@ -81,37 +82,23 @@ public class MultithreadStrategy extends Strategy {
                 scores.put(coordinate, negamax(newBoard, player, depth, DEFAULT_ALPHA, DEFAULT_BETA));
             }
             result = scores.keySet().stream().max(Comparator.comparingDouble(scores::get)).orElse(null);
-            completed = true;
             if (result == null) {
                 score = Double.NaN;
             } else {
                 score = scores.get(result);
             }
+            completed = true;
         }
 
         private double negamax(Board board, Player lastMoved, int depth, double alpha, double beta) {
-            final double WIN_SCORE = Double.POSITIVE_INFINITY;
-            boolean gameOver = true;
-            for (Player player : Player.values()) {
-                if (board.getCount(player) > 0) {
-                    gameOver = false;
-                    break;
-                }
-            }
+            boolean gameOver = board.gameOver();
             Player nextMove = Player.getOpponent(lastMoved);
             if (depth == 0) {
                 return score(board, lastMoved);
             }
             else if (gameOver) {
-                int lastMovedCount = board.getCount(lastMoved);
-                int nextMoveCount = board.getCount(nextMove);
-                if (lastMovedCount > nextMoveCount) {
-                    return WIN_SCORE;
-                }
-                else if (nextMoveCount > lastMovedCount) {
-                    return -1 * WIN_SCORE;
-                }
-                else {
+                double score = Strategy.gameOverScore(board, lastMoved, nextMove);
+                if (score == 0) {
                     return score(board, lastMoved);
                 }
             }
@@ -121,12 +108,12 @@ public class MultithreadStrategy extends Strategy {
                 Board newBoard = board.clone();
                 newBoard.move(coordinate, nextMove);
                 double outcome = -1 * negamax(newBoard, nextMove, depth - 1, -1 * beta, -1 * alpha);
+                scores.add(outcome);
                 value = Math.max(value, outcome);
                 if (value >= beta) {
                     break;
                 }
                 alpha = Math.max(alpha, value);
-                scores.add(outcome);
             }
             return scores.stream().max(Double::compare).orElse(Double.NEGATIVE_INFINITY);
         }
