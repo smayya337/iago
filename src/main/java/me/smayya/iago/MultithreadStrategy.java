@@ -23,30 +23,28 @@ public class MultithreadStrategy extends Strategy {
         long endTime = startTime + TIMEOUT_MS;
         int currentDepth = 1;
         while (System.currentTimeMillis() < endTime || results.isEmpty()) {
+            clearPool();
             if (board.countAllPlayers() + currentDepth > Board.SIZE) {
-                break;
+                continue;
             }
             if (poolIsFull()) {
                 continue;
             }
-            clearPool();
             long diff = endTime - System.currentTimeMillis();
             if (diff > 0) {
                 NegamaxWorkerStrategy worker = new NegamaxWorkerStrategy(board, player, currentDepth);
                 Future<?> future = executor.submit(worker);
-                Runnable cancelTask = () -> future.cancel(true);
-                executor.schedule(cancelTask, diff, TimeUnit.MILLISECONDS);
+                if (currentDepth > 1) {
+                    Runnable cancelTask = () -> future.cancel(true);
+                    executor.schedule(cancelTask, diff, TimeUnit.MILLISECONDS);
+                }
                 jobs.add(worker);
                 currentDepth++;
             }
         }
-        clearPool();
         executor.shutdown();
-        if (results.isEmpty()) {
-            System.err.println("This is weird.");
-        }
+        clearPool();
         NegamaxWorkerStrategy finalOutcome = results.get(results.size() - 1);
-        System.err.println("" + finalOutcome.depth + " " + finalOutcome.getScore());
         return finalOutcome.getResult();
     }
 
@@ -84,12 +82,12 @@ public class MultithreadStrategy extends Strategy {
                 scores.put(coordinate, negamax(newBoard, player, depth, DEFAULT_ALPHA, DEFAULT_BETA));
             }
             result = scores.keySet().stream().max(Comparator.comparingDouble(scores::get)).orElse(null);
-            completed = true;
             if (result == null) {
                 score = Double.NaN;
             } else {
                 score = scores.get(result);
             }
+            completed = true;
         }
 
         private double negamax(Board board, Player lastMoved, int depth, double alpha, double beta) {
