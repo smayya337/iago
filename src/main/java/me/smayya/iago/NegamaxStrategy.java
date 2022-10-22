@@ -53,12 +53,12 @@ public class NegamaxStrategy extends Strategy {
             Board newBoard = board.clone();
             newBoard.move(coordinate, nextMove);
             double outcome = -1 * negamax(newBoard, nextMove, depth - 1, -1 * beta, -1 * alpha);
+            scores.add(outcome);
             value = Math.max(value, outcome);
             if (value >= beta) {
                 break;
             }
             alpha = Math.max(alpha, value);
-            scores.add(outcome);
         }
         return scores.stream().max(Double::compare).orElse(Double.NEGATIVE_INFINITY);
     }

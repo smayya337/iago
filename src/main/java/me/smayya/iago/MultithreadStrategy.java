@@ -42,8 +42,11 @@ public class MultithreadStrategy extends Strategy {
         }
         clearPool();
         executor.shutdown();
+        if (results.isEmpty()) {
+            System.err.println("This is weird.");
+        }
         NegamaxWorkerStrategy finalOutcome = results.get(results.size() - 1);
-        // System.err.println("" + finalOutcome.depth + " " + finalOutcome.getScore());
+        System.err.println("" + finalOutcome.depth + " " + finalOutcome.getScore());
         return finalOutcome.getResult();
     }
 
@@ -93,7 +96,7 @@ public class MultithreadStrategy extends Strategy {
             final double WIN_SCORE = Double.POSITIVE_INFINITY;
             boolean gameOver = true;
             for (Player player : Player.values()) {
-                if (board.getCount(player) > 0) {
+                if (!board.getValidLocations(player).isEmpty()) {
                     gameOver = false;
                     break;
                 }
@@ -121,12 +124,12 @@ public class MultithreadStrategy extends Strategy {
                 Board newBoard = board.clone();
                 newBoard.move(coordinate, nextMove);
                 double outcome = -1 * negamax(newBoard, nextMove, depth - 1, -1 * beta, -1 * alpha);
+                scores.add(outcome);
                 value = Math.max(value, outcome);
                 if (value >= beta) {
                     break;
                 }
                 alpha = Math.max(alpha, value);
-                scores.add(outcome);
             }
             return scores.stream().max(Double::compare).orElse(Double.NEGATIVE_INFINITY);
         }
