@@ -22,11 +22,32 @@ public class NegamaxStrategy extends Strategy {
     }
 
     private double negamax(Board board, Player lastMoved, int depth, double alpha, double beta) {
-        if (depth == 0 || board.countAllPlayers() + depth >= Board.SIZE) {
+        final double WIN_SCORE = Double.POSITIVE_INFINITY;
+        boolean gameOver = true;
+        for (Player player : Player.values()) {
+            if (board.getCount(player) > 0) {
+                gameOver = false;
+                break;
+            }
+        }
+        Player nextMove = Player.getOpponent(lastMoved);
+        if (depth == 0) {
             return score(board, lastMoved);
         }
+        else if (gameOver) {
+            int lastMovedCount = board.getCount(lastMoved);
+            int nextMoveCount = board.getCount(nextMove);
+            if (lastMovedCount > nextMoveCount) {
+                return WIN_SCORE;
+            }
+            else if (nextMoveCount > lastMovedCount) {
+                return -1 * WIN_SCORE;
+            }
+            else {
+                return score(board, lastMoved);
+            }
+        }
         double value = DEFAULT_ALPHA;
-        Player nextMove = Player.getOpponent(lastMoved);
         HashSet<Double> scores = new HashSet<>();
         for (Coordinate coordinate : board.getValidLocations(nextMove)) {
             Board newBoard = board.clone();

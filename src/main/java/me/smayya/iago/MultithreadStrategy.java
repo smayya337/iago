@@ -13,7 +13,7 @@ public class MultithreadStrategy extends Strategy {
     public Coordinate getMove(Board board, Player player) {
         int runningThreads = 0;
         for (Thread t : Thread.getAllStackTraces().keySet()) {
-            if (t.getState()==Thread.State.RUNNABLE) runningThreads++;
+            if (t.getState() == Thread.State.RUNNABLE) runningThreads++;
         }
         threads = Math.max(1, Runtime.getRuntime().availableProcessors() - runningThreads);
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(threads);
@@ -42,7 +42,9 @@ public class MultithreadStrategy extends Strategy {
         }
         clearPool();
         executor.shutdown();
-        return results.get(results.size() - 1).getResult();
+        NegamaxWorkerStrategy finalOutcome = results.get(results.size() - 1);
+        // System.err.println("" + finalOutcome.depth + " " + finalOutcome.getScore());
+        return finalOutcome.getResult();
     }
 
     private boolean poolIsFull() {
@@ -63,6 +65,8 @@ public class MultithreadStrategy extends Strategy {
         private final int depth;
         private Coordinate result = null;
         private boolean completed = false;
+        private Double score;
+
         public NegamaxWorkerStrategy(Board board, Player player, int depth) {
             this.board = board;
             this.player = player;
@@ -78,14 +82,40 @@ public class MultithreadStrategy extends Strategy {
             }
             result = scores.keySet().stream().max(Comparator.comparingDouble(scores::get)).orElse(null);
             completed = true;
+            if (result == null) {
+                score = Double.NaN;
+            } else {
+                score = scores.get(result);
+            }
         }
 
         private double negamax(Board board, Player lastMoved, int depth, double alpha, double beta) {
-            if (depth == 0 || board.countAllPlayers() + depth >= Board.SIZE) {
+            final double WIN_SCORE = Double.POSITIVE_INFINITY;
+            boolean gameOver = true;
+            for (Player player : Player.values()) {
+                if (board.getCount(player) > 0) {
+                    gameOver = false;
+                    break;
+                }
+            }
+            Player nextMove = Player.getOpponent(lastMoved);
+            if (depth == 0) {
                 return score(board, lastMoved);
             }
+            else if (gameOver) {
+                int lastMovedCount = board.getCount(lastMoved);
+                int nextMoveCount = board.getCount(nextMove);
+                if (lastMovedCount > nextMoveCount) {
+                    return WIN_SCORE;
+                }
+                else if (nextMoveCount > lastMovedCount) {
+                    return -1 * WIN_SCORE;
+                }
+                else {
+                    return score(board, lastMoved);
+                }
+            }
             double value = DEFAULT_ALPHA;
-            Player nextMove = Player.getOpponent(lastMoved);
             HashSet<Double> scores = new HashSet<>();
             for (Coordinate coordinate : board.getValidLocations(nextMove)) {
                 Board newBoard = board.clone();
@@ -102,7 +132,7 @@ public class MultithreadStrategy extends Strategy {
         }
 
         private double score(Board board, Player player) {
-            final double SPOT_MULTIPLIER = 8;
+            final double SPOT_MULTIPLIER = 32;
             final double MOBILITY_MULTIPLIER = 16;
             double total = 0.0;
             Player opponent = Player.getOpponent(player);
@@ -121,8 +151,8 @@ public class MultithreadStrategy extends Strategy {
         }
 
         private double tokenScore(Board board, int index) {
-            final double CORNER_POINTS = 4;
-            final double EDGE_POINTS = 2;
+            final double CORNER_POINTS = 16;
+            final double EDGE_POINTS = 4;
             final double NORMAL_POINTS = 1;
             if (board.isCorner(index)) {
                 return CORNER_POINTS;
@@ -143,6 +173,10 @@ public class MultithreadStrategy extends Strategy {
 
         public boolean isCompleted() {
             return completed;
+        }
+
+        public Double getScore() {
+            return score;
         }
     }
 }
